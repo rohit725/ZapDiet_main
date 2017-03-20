@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "321377150579",
+    "firebase_url": "https://zapdiet.firebaseio.com",
+    "project_id": "zapdiet",
+    "storage_bucket": "zapdiet.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:321377150579:android:ccc7312b42ba75ce",
+        "android_client_info": {
+          "package_name": "trainedge.zapdiet"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "321377150579-i6oo7rc9o6aj8qp0d7748nqhmp7cdj0n.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "trainedge.zapdiet",
+            "certificate_hash": "e3fe5e7506a7a226a35b32585fbed087b495a3cb"
+          }
+        },
+        {
+          "client_id": "321377150579-9e8aip06lno5svm6k0qpen31285eue67.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDwB6cFRaQItNVFZusw9tKy_Wf_1tzXSrA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "321377150579-9e8aip06lno5svm6k0qpen31285eue67.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
