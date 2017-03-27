@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="trainedge.zapdiet.home">
+    tools:context="trainedge.zapdiet.Feedback">
+
+    <include layout="@layout/content_feedback" />
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
@@ -19,7 +21,5 @@
             app:popupTheme="@style/AppTheme.PopupOverlay" />
 
     </android.support.design.widget.AppBarLayout>
-
-    <include layout="@layout/content_home" />
 
 </android.support.design.widget.CoordinatorLayout>

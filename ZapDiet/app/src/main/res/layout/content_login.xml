@@ -6,33 +6,46 @@
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="trainedge.zapdiet.login"
-    tools:showIn="@layout/activity_login">
+    tools:showIn="@layout/activity_login"
+    tools:layout_editor_absoluteY="25dp"
+    tools:layout_editor_absoluteX="0dp">
 
     <Button
         android:id="@+id/GoogleSignIn"
-        style="@style/Widget.AppCompat.Button"
+        style="@style/com_facebook_loginview_silver_style"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/holo_red_dark"
-        android:drawableLeft="@drawable/common_google_signin_btn_icon_light_normal"
-        android:padding="5dp"
-        android:text="CONTINUE WITH GOOGLE"
+        android:layout_marginTop="33dp"
+        android:background="@drawable/google_login"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="Continue With Google"
         android:textAppearance="@style/TextAppearance.AppCompat"
         android:textColor="@android:color/background_light"
         android:textSize="18sp"
-        tools:layout_editor_absoluteX="59dp"
-        tools:layout_editor_absoluteY="373dp" />
+        android:textStyle="bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <Button
         android:id="@+id/SignUp"
+        style="@style/com_facebook_button_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
+        android:layout_marginEnd="30dp"
+        android:layout_marginTop="23dp"
+        android:background="@drawable/button_round"
         android:text="SIGNUP"
         android:textColor="@android:color/background_light"
-        android:textSize="22sp"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="307dp" />
+        android:textSize="18sp"
+        app:layout_constraintRight_toRightOf="@+id/button2"
+        app:layout_constraintTop_toBottomOf="@+id/button2"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <TextView
         android:id="@+id/textView"
@@ -41,69 +54,94 @@
         android:fontFamily="monospace"
         android:text="OR"
         android:textSize="24sp"
-        tools:layout_editor_absoluteX="177dp"
-        tools:layout_editor_absoluteY="267dp" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="monospace"
-        android:text="USERNAME"
-        android:textSize="20sp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="87dp" />
+        app:layout_constraintRight_toLeftOf="@+id/SignUp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginEnd="22dp"
+        android:layout_marginTop="18dp"
+        app:layout_constraintTop_toBottomOf="@+id/SignUp" />
 
     <EditText
         android:id="@+id/UserName"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="27dp"
+        android:layout_marginEnd="42dp"
+        android:layout_marginStart="42dp"
         android:ems="10"
         android:inputType="textPersonName"
         android:text="Name"
-        tools:layout_editor_absoluteX="124dp"
-        tools:layout_editor_absoluteY="75dp" />
-
-    <TextView
-        android:id="@+id/textView5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="monospace"
-        android:text="PASSWORD"
-        android:textSize="20sp"
-        tools:layout_editor_absoluteX="16dp"
-        tools:layout_editor_absoluteY="150dp" />
+        app:layout_constraintBottom_toTopOf="@+id/Password"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
 
     <EditText
         android:id="@+id/Password"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="42dp"
         android:ems="10"
         android:inputType="textPassword"
         android:text="*****"
-        tools:layout_editor_absoluteX="124dp"
-        tools:layout_editor_absoluteY="139dp" />
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintBottom_creator="1"
+        app:layout_constraintBottom_toTopOf="@+id/button2"
+        android:layout_marginEnd="42dp"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        app:layout_constraintLeft_toLeftOf="parent" />
 
     <Button
         android:id="@+id/SignIn"
+        style="@style/com_facebook_button_like"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/colorPrimary"
+        android:layout_marginBottom="18dp"
+        android:layout_marginEnd="29dp"
+        android:background="@drawable/button_round"
         android:text="SIGNIN"
         android:textAllCaps="false"
         android:textColor="@android:color/background_light"
-        android:textSize="22sp"
-        tools:layout_editor_absoluteX="147dp"
-        tools:layout_editor_absoluteY="206dp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toTopOf="@+id/textView"
+        app:layout_constraintRight_toLeftOf="@+id/textView"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintRight_creator="1"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="29dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintHorizontal_bias="1.0" />
 
     <com.facebook.login.widget.LoginButton
         android:id="@+id/FacebookSignIn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="65dp"
         android:textAppearance="@style/TextAppearance.AppCompat"
-        android:textSize="22sp"
-        tools:layout_editor_absoluteX="56dp"
-        tools:layout_editor_absoluteY="456dp" />
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
+
+    <Button
+        android:id="@+id/button2"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password ?"
+        android:textColor="@color/colorPrimary"
+        android:layout_marginEnd="37dp"
+        tools:layout_constraintTop_creator="1"
+        tools:layout_constraintRight_creator="1"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginTop="175dp"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
