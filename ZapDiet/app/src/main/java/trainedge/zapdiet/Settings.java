@@ -13,11 +13,11 @@ import android.widget.Toast;
 
 public class Settings extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener,View.OnClickListener {
 
-    private Button acc_detail;
-    private Button priv_pol;
-    private Button share;
-    private Button about;
-    private Button logout;
+    private Button accdet;
+    private Button ppol;
+    private Button shr;
+    private Button abt;
+    private Button lgt;
     private Switch notif;
     private SharedPreferences pref;
 
@@ -31,14 +31,17 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
 
         pref = getSharedPreferences("setting_pref", MODE_PRIVATE);
 
-        acc_detail = (Button) findViewById(R.id.acc_detail);
-        priv_pol = (Button) findViewById(R.id.priv_pol);
-        share = (Button) findViewById(R.id.share);
-        about = (Button) findViewById(R.id.about);
-        logout = (Button) findViewById(R.id.logout);
+        accdet = (Button) findViewById(R.id.acc_detail);
+        ppol = (Button) findViewById(R.id.priv_pol);
+        shr = (Button) findViewById(R.id.share);
+        abt = (Button) findViewById(R.id.about);
+        lgt = (Button) findViewById(R.id.logout);
         notif = (Switch) findViewById(R.id.notif);
-
+        accdet.setOnClickListener(this);
+        abt.setOnClickListener(this);
+        ppol.setOnClickListener(this);
         notif.setOnCheckedChangeListener(this);
+
         updateUI();
 
 
@@ -50,16 +53,16 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.about) {
-            Intent about = new Intent(Settings.this, About.class);
-            startActivity(about);
+            Intent aboutintent = new Intent(Settings.this, About.class);
+            startActivity(aboutintent);
         }
         if (v.getId() == R.id.acc_detail) {
-            Intent acc_detail = new Intent(Settings.this, acc_details.class);
-            startActivity(acc_detail);
+            Intent accintent = new Intent(Settings.this, acc_details.class);
+            startActivity(accintent);
         }
         if (v.getId() == R.id.priv_pol) {
-            Intent priv_pol = new Intent(Settings.this,priv_pol.class);
-            startActivity(priv_pol);
+            Intent privintent = new Intent(Settings.this,priv_pol.class);
+            startActivity(privintent);
         }
         /*if (v.getId() == R.id.share) {
 
