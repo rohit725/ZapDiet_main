@@ -14,9 +14,7 @@
         <activity
             android:name=".login"
             android:label="@string/title_activity_login"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".home"
             android:label="@string/title_activity_home"
@@ -40,28 +38,28 @@
         </activity>
         <activity
             android:name=".About"
-            android:parentActivityName=".Settings"
             android:label="@string/title_activity_about"
+            android:parentActivityName=".Settings"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Feedback"
-            android:parentActivityName=".home"
             android:label="@string/title_activity_feedback"
+            android:parentActivityName=".home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Splash"
             android:label="@string/title_activity_splash"
             android:theme="@style/AppTheme.NoActionBar">
-        <intent-filter>
-        <action android:name="android.intent.action.MAIN" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
-        <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
-            android:parentActivityName=".home"
             android:name=".Settings"
             android:label="@string/title_activity_settings"
+            android:parentActivityName=".home"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".acc_details"
@@ -69,10 +67,14 @@
             android:parentActivityName=".Settings"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:parentActivityName=".Settings"
             android:name=".priv_pol"
             android:label="@string/title_activity_priv_pol"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:parentActivityName=".Settings"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".SignUp"
+            android:label="@string/title_activity_sign_up"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

@@ -1,5 +1,6 @@
 package trainedge.zapdiet;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,6 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.AccessToken;
@@ -43,6 +46,10 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private CallbackManager mCallbackManager;
+    private TextView signup;
+    private Button sigin;
+    private EditText usename;
+    private EditText pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +111,12 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 // ...
             }
         });
+        signup = (TextView) findViewById(R.id.SignUp);
+        sigin = (Button) findViewById(R.id.SignIn);
+        usename = (EditText)findViewById(R.id.UserName);
+        pass = (EditText) findViewById(R.id.Password);
+        signup.setOnClickListener(this);
+        sigin.setOnClickListener(this);
 
     }
 
@@ -179,6 +192,32 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
         switch (v.getId()) {
             case R.id.GoogleSignIn:
                 signIn();
+                break;
+            case R.id.SignUp:
+                Intent signupintent = new Intent(login.this,SignUp.class);
+                startActivity(signupintent);
+                break;
+            case R.id.SignIn:
+                String uname = usename.getText().toString();
+                String pasw = pass.getText().toString();
+                final ProgressDialog progressDialog = new ProgressDialog(login.this,
+                        R.style.AppTheme_PopupOverlay);
+                progressDialog.setIndeterminate(true);
+                progressDialog.setMessage("Authenticating...");
+                progressDialog.show();
+                Thread mythread = new Thread(){
+                    @Override
+                    public void run(){
+                        try {
+                            sleep(3000);
+                            progressDialog.dismiss();
+                            Intent homeint = new Intent(login.this,home.class);
+                            startActivity(homeint);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                };
                 break;
         }
     }
