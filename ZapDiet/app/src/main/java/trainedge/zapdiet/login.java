@@ -198,10 +198,10 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 startActivity(signupintent);
                 break;
             case R.id.SignIn:
-                String uname = usename.getText().toString();
-                String pasw = pass.getText().toString();
+                //String uname = usename.getText().toString();
+                //String pasw = pass.getText().toString();
                 final ProgressDialog progressDialog = new ProgressDialog(login.this,
-                        R.style.AppTheme_PopupOverlay);
+                        R.style.Theme_AppCompat_DayNight_Dialog_Alert);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Authenticating...");
                 progressDialog.show();
@@ -218,6 +218,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         }
                     }
                 };
+                mythread.start();
                 break;
         }
     }
