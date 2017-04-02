@@ -4,28 +4,72 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@android:color/holo_green_light"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="trainedge.zapdiet.acc_details"
     tools:showIn="@layout/activity_acc_details">
-    <ImageView
-        android:id="@+id/header_cover_image"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:scaleType="centerCrop"
-        tools:layout_editor_absoluteY="0dp"
-        tools:layout_editor_absoluteX="8dp" />
 
     <ImageButton
         android:id="@+id/user_profile_photo"
         android:layout_width="120dp"
         android:layout_height="120dp"
-        android:layout_below="@+id/header_cover_image"
         android:layout_centerHorizontal="true"
+        android:layout_marginBottom="49dp"
         android:background="@drawable/profile_image"
         android:elevation="5dp"
         android:padding="20dp"
         android:scaleType="centerCrop"
-        tools:layout_editor_absoluteY="33dp"
-        tools:layout_editor_absoluteX="112dp" />
+        app:layout_constraintBottom_toTopOf="@+id/user_profile_name"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
+
+    <ImageView
+        android:id="@+id/header_cover_image"
+        android:layout_width="0dp"
+        android:layout_height="200dp"
+        android:elevation="1dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/materialback2"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
+
+    <TextView
+        android:id="@+id/user_profile_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="173dp"
+        android:text="Rohit Kumar Pandey"
+        android:textColor="#fff"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1" />
+
+    <TextView
+        android:id="@+id/user_profile_short_bio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="28dp"
+        android:layout_marginTop="23dp"
+        android:text="rpandey516@gmail.com"
+        android:textColor="#fff"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="@+id/user_profile_name"
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_name"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
 </android.support.constraint.ConstraintLayout>

@@ -8,22 +8,23 @@
     tools:context="trainedge.zapdiet.SignUp"
     tools:showIn="@layout/activity_sign_up">
 
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:fitsSystemWindows="true"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        tools:layout_constraintBottom_creator="1"
-        android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginEnd="8dp"
-        app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="8dp"
-        tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:fitsSystemWindows="true"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0"
+        tools:layout_constraintBottom_creator="1"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +39,7 @@
                 android:layout_height="72dp"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="24dp"
-                android:src="@drawable/appicon" />
+                android:src="@drawable/app_icon1" />
 
             <EditText
                 android:id="@+id/input_name"
@@ -68,12 +69,15 @@
                 android:inputType="textPassword" />
 
             <Button
+                android:id="@+id/create_account"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="12dp"
                 android:layout_marginTop="24dp"
+                android:background="@drawable/button_round"
                 android:padding="12dp"
-                android:text="Create Account" />
+                android:text="Create Account"
+                android:textColor="@color/cardview_light_background" />
 
             <TextView
                 android:id="@+id/link_login"
@@ -82,6 +86,7 @@
                 android:layout_marginBottom="24dp"
                 android:gravity="center"
                 android:text="Already a member? Login"
+                android:textColor="@color/colorPrimary"
                 android:textSize="16dip" />
 
 

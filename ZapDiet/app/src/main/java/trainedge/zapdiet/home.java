@@ -23,6 +23,7 @@ public class home extends AppCompatActivity
         setContentView(R.layout.activity_home);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("ZapDiet");
 
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
