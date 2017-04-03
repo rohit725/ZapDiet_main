@@ -1,13 +1,16 @@
 package trainedge.zapdiet;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +39,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+
+
 public class login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
     public static final int RC_SIGN_IN = 7283;
@@ -48,8 +53,9 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private CallbackManager mCallbackManager;
     private TextView signup;
     private Button sigin;
-    private EditText usename;
+    private EditText email;
     private EditText pass;
+    private TextView fpass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -113,10 +119,14 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
         });
         signup = (TextView) findViewById(R.id.SignUp);
         sigin = (Button) findViewById(R.id.SignIn);
-        usename = (EditText)findViewById(R.id.UserName);
+        email = (EditText)findViewById(R.id.Email1);
         pass = (EditText) findViewById(R.id.Password);
+        fpass = (TextView) findViewById(R.id.forgot);
         signup.setOnClickListener(this);
         sigin.setOnClickListener(this);
+        fpass.setOnClickListener(this);
+        email.addTextChangedListener(GenericTextWatcher);
+        pass.addTextChangedListener(GenericTextWatcher);
 
     }
 
@@ -133,15 +143,13 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
         if (requestCode == RC_SIGN_IN) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
             if (result.isSuccess()) {
-                // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
             } else {
                 // Google Sign In failed, update UI appropriately
-                // ...
+                Toast.makeText(login.this, "Signin through google failed", Toast.LENGTH_LONG).show();
             }
         }
-        // Pass the activity result back to the Facebook SDK
         mCallbackManager.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -169,10 +177,6 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(login.this, "Authentication failed.",
@@ -198,28 +202,75 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 startActivity(signupintent);
                 break;
             case R.id.SignIn:
-                //String uname = usename.getText().toString();
-                //String pasw = pass.getText().toString();
+                String emai = email.getText().toString();
+                String pasw = pass.getText().toString();
+                if(emai.length() < 10 && !emai.contains("@") && !emai.contains(".com")){
+                    email.setError("Enter a valid email");
+                    return;
+                }
+                if(pasw.length() < 8){
+                    pass.setError("Password must be at least 8 characters");
+                    return;
+                }
+                Log.d(TAG, "signIn:" + emai);
                 final ProgressDialog progressDialog = new ProgressDialog(login.this,
                         R.style.Theme_AppCompat_DayNight_Dialog_Alert);
                 progressDialog.setIndeterminate(true);
                 progressDialog.setMessage("Authenticating...");
                 progressDialog.show();
-                Thread mythread = new Thread(){
-                    @Override
-                    public void run(){
-                        try {
-                            sleep(3000);
-                            progressDialog.dismiss();
-                            Intent homeint = new Intent(login.this,home.class);
-                            startActivity(homeint);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                };
-                mythread.start();
+                mAuth.signInWithEmailAndPassword(emai, pasw)
+                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                                if (!task.isSuccessful()) {
+                                    Log.w(TAG, "signInWithEmail:failed", task.getException());
+                                    Toast.makeText(login.this, "Authentication Failed...",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                                if (task.isSuccessful()) {
+                                    progressDialog.dismiss();
+                                    Intent homeint = new Intent(login.this,home.class);
+                                    startActivity(homeint);
+                                }
+
+                            }
+                        });
                 break;
+            case R.id.forgot:
+               /* AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+                final TextView tt = new TextView(this);
+                tt.setTextSize(18);
+                tt.setText("Enter your authorised email address to send verification.");
+                final EditText et = new EditText(this);
+
+                // set prompts.xml to alertdialog builder
+                alertDialogBuilder.setView(tt);
+                alertDialogBuilder.setView(et);
+
+                // set dialog message
+                alertDialogBuilder.setCancelable(true).setPositiveButton("Send", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        String emailAddress = et.getText().toString();
+
+                        mAuth.sendPasswordResetEmail(emailAddress)
+                                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<Void> task) {
+                                        if (task.isSuccessful()) {
+                                            Log.d(TAG, "Email sent.");
+                                        }
+                                    }
+                                });
+                    }
+                });
+                // create alert dialog
+                AlertDialog alertDialog = alertDialogBuilder.create();
+                // show it
+                alertDialog.show();
+
+                break;*/
         }
     }
 
@@ -232,18 +283,48 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         Log.d(TAG, "signInWithCredential:onComplete:" + task.isSuccessful());
-
-                        // If sign in fails, display a message to the user. If sign in succeeds
-                        // the auth state listener will be notified and logic to handle the
-                        // signed in user can be handled in the listener.
                         if (!task.isSuccessful()) {
                             Log.w(TAG, "signInWithCredential", task.getException());
                             Toast.makeText(login.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
-
-                        // ...
                     }
                 });
     }
+
+    private TextWatcher GenericTextWatcher = new TextWatcher() {
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+
+            if (email.getText().hashCode() == s.hashCode())
+            {
+                email_onTextChanged(s);
+            }
+            else if (pass.getText().hashCode() == s.hashCode())
+            {
+                pass_onTextChanged(s);
+            }
+        }
+        @Override
+        public void afterTextChanged(Editable s) {}
+
+    };
+    private void email_onTextChanged(CharSequence s){
+        String string = s.toString();
+        if(string.length() < 10){
+            email.setError("Recquired (10 characters minimum)");
+        }
+    }
+    private void pass_onTextChanged(CharSequence s){
+        String string = s.toString();
+        if(string.length() < 8){
+            pass.setError("Recquired (8 characters minimum.)");
+        }
+    }
+
 }

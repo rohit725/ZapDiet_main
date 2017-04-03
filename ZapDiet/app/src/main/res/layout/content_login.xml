@@ -39,13 +39,13 @@
                 app:srcCompat="@drawable/app_icon1" />
 
             <EditText
-                android:id="@+id/UserName"
+                android:id="@+id/Email1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="8dp"
                 android:layout_marginTop="8dp"
                 android:ems="10"
-                android:hint="Name"
+                android:hint="Email"
                 android:inputType="textPersonName" />
 
             <EditText

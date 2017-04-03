@@ -11,6 +11,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class Settings extends AppCompatActivity implements CompoundButton.OnCheckedChangeListener,View.OnClickListener {
 
     private Button accdet;
@@ -20,6 +22,7 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
     private Button lgt;
     private Switch notif;
     private SharedPreferences pref;
+    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +40,7 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
         abt = (Button) findViewById(R.id.about);
         lgt = (Button) findViewById(R.id.logout);
         notif = (Switch) findViewById(R.id.notif);
+        mAuth = FirebaseAuth.getInstance();
         accdet.setOnClickListener(this);
         abt.setOnClickListener(this);
         ppol.setOnClickListener(this);
@@ -66,18 +70,12 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
         }
         /*if (v.getId() == R.id.share) {
 
-        }
-        if (v.getId() == R.id.logout) {
-
         }*/
+        if (v.getId() == R.id.logout) {
+            mAuth.signOut();
+        }
     }
 
-    /**
-     * Called when the checked state of a compound button has changed.
-     *
-     * @param buttonView The compound button view whose state has changed.
-     * @param isChecked  The new checked state of buttonView.
-     */
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
         SharedPreferences.Editor editor = pref.edit();

@@ -2,32 +2,35 @@ package trainedge.zapdiet;
 
 import android.app.ProgressDialog;
 import android.os.Bundle;
-import android.support.design.widget.Snackbar;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
-import java.util.HashMap;
 
+public class SignUp extends AppCompatActivity implements View.OnClickListener{
 
-public class SignUp extends AppCompatActivity implements View.OnClickListener, TextWatcher{
-
+    public static final String TAG = "SignUp";
     private Button btn;
     private TextView txtview;
     private EditText password;
     private EditText email;
     private EditText name;
-    private FirebaseDatabase db;
-    private DatabaseReference usersref;
+    private FirebaseAuth mAuth;
+    private FirebaseAuth.AuthStateListener mAuthListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,44 +45,85 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener, T
         btn = (Button) findViewById(R.id.create_account);
         txtview = (TextView) findViewById(R.id.link_login);
 
-        db = FirebaseDatabase.getInstance();
-        usersref = db.getReference("Users");
-
         btn.setOnClickListener(this);
         txtview.setOnClickListener(this);
-        name.addTextChangedListener(this);
-        email.addTextChangedListener(this);
-        //password.addTextChangedListener(this);        implement it later.
-
-
+        name.addTextChangedListener(GenericTextWatcher);
+        email.addTextChangedListener(GenericTextWatcher);
+        password.addTextChangedListener(GenericTextWatcher);
+        mAuth = FirebaseAuth.getInstance();
+        mAuthListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if (user != null) {
+                    // User is signed in
+                    Log.d(TAG, "onAuthStateChanged:signed_in:" + user.getUid());
+                } else {
+                    // User is signed out
+                    Log.d(TAG, "onAuthStateChanged:signed_out");
+                }
+            }
+        }; 
     }
 
-
     @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+    public void onStart() {
+        super.onStart();
+        mAuth.addAuthStateListener(mAuthListener);
     }
 
     @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+    public void onStop() {
+        super.onStop();
+        if (mAuthListener != null) {
+            mAuth.removeAuthStateListener(mAuthListener);
+        }
     }
+    private TextWatcher GenericTextWatcher = new TextWatcher() {
 
-    @Override
-    public void afterTextChanged(Editable s) {
-        if(s == name.getEditableText()){
-            String names = name.getText().toString();
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before,
+                                  int count) {
+
+            if (email.getText().hashCode() == s.hashCode())
+            {
+                email_onTextChanged(s);
+            }
+            else if (password.getText().hashCode() == s.hashCode())
+            {
+                pass_onTextChanged(s);
+            }
+            else if(name.getText().hashCode() == s.hashCode()){
+                name_onTextChanged(s);
+            }
+        }
+        @Override
+        public void afterTextChanged(Editable s) {}
+
+    };
+
+    private void name_onTextChanged(CharSequence s) {
+            String names = s.toString();
             if (names.isEmpty() && names.length() < 3) {
-                name.setError("please enter your name correctly");
+                name.setError("Recquired (Minimum 3 characters)");
             }
-        }
-        else if(s == email.getEditableText()){
-            String emails = email.getText().toString();
-            if (emails.isEmpty() && emails.length() < 10 && !emails.contains("@")) {
-                email.setError("please enter a valid email");
-            }
-        }
+    }
 
+    private void email_onTextChanged(CharSequence s) {
+        String emails = s.toString();
+        if (emails.length() < 10) {
+            email.setError("Recquired (Minimum 10 characters)");
+        }
+    }
+
+    private void pass_onTextChanged(CharSequence s){
+        String passwords = s.toString();
+        if (passwords.length() < 8) {
+            email.setError("Recquired (Minimum 8 characters)");
+        }
     }
 
     @Override
@@ -87,32 +131,51 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener, T
         if(v.getId() == R.id.link_login){
             finish();
         }
-        else if(v.getId() == R.id.create_account){
+        if(v.getId() == R.id.create_account){
 
             String names = name.getText().toString();
             String emails = email.getText().toString();
             String passwords = password.getText().toString();
+            Log.d(TAG, "Create Account:" + emails);
             if(names.isEmpty()){
-                Snackbar.make(v, "Please Enter Your Name First!", Snackbar.LENGTH_INDEFINITE).show();
+                name.setError("Please enter your name.");
                 return;
             }
-            if(emails.isEmpty()){
-                Snackbar.make(v, "Please Enter Your Email First!", Snackbar.LENGTH_INDEFINITE).show();
+            if(!emails.contains("@") && !emails.contains(".com") && emails.length() <10){
+                email.setError("Enter a valid email address.");
                 return;
             }
             if(passwords.length() < 8){
-                Snackbar.make(v, "Password must be at least 8 characters.", Snackbar.LENGTH_INDEFINITE).show();
+                password.setError("Password must be at least 8 characters");
                 return;
             }
 
-            HashMap<String,String> map = new HashMap<>();
-            map.put("Name",names);
-            map.put("Email",emails);
-            map.put("Password",passwords);
-            usersref.push().setValue(map);
+            final ProgressDialog progressDialog = new ProgressDialog(SignUp.this,
+                    R.style.Theme_AppCompat_DayNight_Dialog_Alert);
+            progressDialog.setIndeterminate(true);
+            progressDialog.setMessage("Creating Account...");
+            progressDialog.show();
 
+            mAuth.createUserWithEmailAndPassword(emails, passwords)
+                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+
+                            // If sign in fails, display a message to the user. If sign in succeeds
+                            // the auth state listener will be notified and logic to handle the
+                            // signed in user can be handled in the listener.
+                            if (!task.isSuccessful()) {
+                                Toast.makeText(SignUp.this, "Account Creation Failed",
+                                        Toast.LENGTH_SHORT).show();
+                            }
+                            progressDialog.dismiss();
+                        }
+                    });
             finish();
         }
 
     }
+
+
 }
