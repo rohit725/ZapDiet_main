@@ -91,7 +91,8 @@
         app:layout_constraintRight_toRightOf="@+id/about"
         tools:layout_constraintLeft_creator="1"
         android:layout_marginBottom="145dp"
-        app:layout_constraintLeft_toLeftOf="@+id/about" />
+        app:layout_constraintLeft_toLeftOf="@+id/about"
+        app:layout_constraintHorizontal_bias="0.0" />
 
     <TextView
         android:id="@+id/textView2"

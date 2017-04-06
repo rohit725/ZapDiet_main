@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,11 +52,8 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
     private CallbackManager mCallbackManager;
-    private TextView signup;
-    private Button sigin;
     private EditText email;
     private EditText pass;
-    private TextView fpass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,16 +115,18 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 // ...
             }
         });
-        signup = (TextView) findViewById(R.id.SignUp);
-        sigin = (Button) findViewById(R.id.SignIn);
+        TextView signup = (TextView) findViewById(R.id.SignUp);
+        Button sigin = (Button) findViewById(R.id.SignIn);
         email = (EditText)findViewById(R.id.Email1);
         pass = (EditText) findViewById(R.id.Password);
-        fpass = (TextView) findViewById(R.id.forgot);
+        TextView fpass = (TextView) findViewById(R.id.forgot);
         signup.setOnClickListener(this);
         sigin.setOnClickListener(this);
         fpass.setOnClickListener(this);
         email.addTextChangedListener(GenericTextWatcher);
         pass.addTextChangedListener(GenericTextWatcher);
+
+        Toast.makeText(login.this, "Please login in order to proceed.", Toast.LENGTH_LONG).show();
 
     }
 
@@ -202,75 +202,11 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 startActivity(signupintent);
                 break;
             case R.id.SignIn:
-                String emai = email.getText().toString();
-                String pasw = pass.getText().toString();
-                if(emai.length() < 10 && !emai.contains("@") && !emai.contains(".com")){
-                    email.setError("Enter a valid email");
-                    return;
-                }
-                if(pasw.length() < 8){
-                    pass.setError("Password must be at least 8 characters");
-                    return;
-                }
-                Log.d(TAG, "signIn:" + emai);
-                final ProgressDialog progressDialog = new ProgressDialog(login.this,
-                        R.style.Theme_AppCompat_DayNight_Dialog_Alert);
-                progressDialog.setIndeterminate(true);
-                progressDialog.setMessage("Authenticating...");
-                progressDialog.show();
-                mAuth.signInWithEmailAndPassword(emai, pasw)
-                        .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
-                                if (!task.isSuccessful()) {
-                                    Log.w(TAG, "signInWithEmail:failed", task.getException());
-                                    Toast.makeText(login.this, "Authentication Failed...",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                                if (task.isSuccessful()) {
-                                    progressDialog.dismiss();
-                                    Intent homeint = new Intent(login.this,home.class);
-                                    startActivity(homeint);
-                                }
-
-                            }
-                        });
+                mysignin();
                 break;
             case R.id.forgot:
-               /* AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-
-                final TextView tt = new TextView(this);
-                tt.setTextSize(18);
-                tt.setText("Enter your authorised email address to send verification.");
-                final EditText et = new EditText(this);
-
-                // set prompts.xml to alertdialog builder
-                alertDialogBuilder.setView(tt);
-                alertDialogBuilder.setView(et);
-
-                // set dialog message
-                alertDialogBuilder.setCancelable(true).setPositiveButton("Send", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        String emailAddress = et.getText().toString();
-
-                        mAuth.sendPasswordResetEmail(emailAddress)
-                                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if (task.isSuccessful()) {
-                                            Log.d(TAG, "Email sent.");
-                                        }
-                                    }
-                                });
-                    }
-                });
-                // create alert dialog
-                AlertDialog alertDialog = alertDialogBuilder.create();
-                // show it
-                alertDialog.show();
-
-                break;*/
+                forgot();
+                break;
         }
     }
 
@@ -314,12 +250,14 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
         public void afterTextChanged(Editable s) {}
 
     };
+
     private void email_onTextChanged(CharSequence s){
         String string = s.toString();
         if(string.length() < 10){
             email.setError("Recquired (10 characters minimum)");
         }
     }
+
     private void pass_onTextChanged(CharSequence s){
         String string = s.toString();
         if(string.length() < 8){
@@ -327,4 +265,82 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
         }
     }
 
+    private void forgot(){
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        final TextView tt = new TextView(this);
+        final EditText et = new EditText(this);
+        LinearLayout ll= new LinearLayout(login.this);
+        ll.setOrientation(LinearLayout.VERTICAL);
+        ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
+        ll.addView(tt);
+        ll.addView(et);
+        String str = "Please enter your authorized email address.";
+        tt.setText(str);
+        tt.setTextSize(14);
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(ll);
+        // set dialog message
+        alertDialogBuilder.setCancelable(false).setPositiveButton("Send", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                String emailAddress = et.getText().toString();
+                mAuth.sendPasswordResetEmail(emailAddress)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            @Override
+                            public void onComplete(@NonNull Task<Void> task) {
+                                if (task.isSuccessful()) {
+                                    Log.d(TAG, "Email sent.");
+                                    Toast.makeText(login.this, "Email sent please check.", Toast.LENGTH_LONG).show();
+                                }
+                                if(!task.isSuccessful()){
+                                    Log.d(TAG, "Error Unauthorized email.");
+                                    Toast.makeText(login.this, "Invalid Email Address.", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        });
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        // show it
+        alertDialog.show();
+    }
+
+    private void mysignin(){
+        String emai = email.getText().toString();
+        String pasw = pass.getText().toString();
+        if(emai.length() < 10 && !emai.contains("@") && !emai.contains(".com") && emai.isEmpty()){
+            email.setError("Enter a valid email");
+            return;
+        }
+        if(pasw.length() < 8){
+            pass.setError("Password must be at least 8 characters");
+            return;
+        }
+        Log.d(TAG, "signIn:" + emai);
+        final ProgressDialog progressDialog = new ProgressDialog(login.this,
+                R.style.Theme_AppCompat_DayNight_Dialog_Alert);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+        mAuth.signInWithEmailAndPassword(emai, pasw)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "signInWithEmail:onComplete:" + task.isSuccessful());
+                        if (!task.isSuccessful()) {
+                            progressDialog.dismiss();
+                            Log.w(TAG, "signInWithEmail:failed", task.getException());
+                            Toast.makeText(login.this, "Authentication Failed...",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        if (task.isSuccessful()) {
+                            progressDialog.dismiss();
+                            Intent homeint = new Intent(login.this,home.class);
+                            startActivity(homeint);
+                        }
+
+                    }
+                });
+    }
 }

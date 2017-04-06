@@ -1,8 +1,8 @@
 <resources>
     <string name="app_name">ZapDiet</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login">login</string>
-    <string name="title_activity_home">home</string>
+    <string name="title_activity_login">Login</string>
+    <string name="title_activity_home">ZapDiet</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="facebook_app_id">1903980636484159</string>
@@ -11,7 +11,7 @@
     <string name="title_activity_feedback">Feedback</string>
     <string name="title_activity_splash">ZapDiet</string>
     <string name="title_activity_settings">Settings</string>
-    <string name="title_activity_acc_details">acc_details</string>
-    <string name="title_activity_priv_pol">priv_pol</string>
+    <string name="title_activity_acc_details">User Profile</string>
+    <string name="title_activity_priv_pol">Privacy Policy</string>
     <string name="title_activity_sign_up">SignUp</string>
 </resources>

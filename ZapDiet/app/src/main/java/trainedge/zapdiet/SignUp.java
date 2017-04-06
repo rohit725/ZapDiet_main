@@ -19,13 +19,16 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener{
 
     public static final String TAG = "SignUp";
-    private Button btn;
-    private TextView txtview;
     private EditText password;
     private EditText email;
     private EditText name;
@@ -42,8 +45,8 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
         name = (EditText) findViewById(R.id.input_name);
         email = (EditText) findViewById(R.id.input_email);
         password = (EditText) findViewById(R.id.input_password);
-        btn = (Button) findViewById(R.id.create_account);
-        txtview = (TextView) findViewById(R.id.link_login);
+        Button btn = (Button) findViewById(R.id.create_account);
+        TextView txtview = (TextView) findViewById(R.id.link_login);
 
         btn.setOnClickListener(this);
         txtview.setOnClickListener(this);
@@ -79,6 +82,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             mAuth.removeAuthStateListener(mAuthListener);
         }
     }
+
     private TextWatcher GenericTextWatcher = new TextWatcher() {
 
         @Override
@@ -122,7 +126,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
     private void pass_onTextChanged(CharSequence s){
         String passwords = s.toString();
         if (passwords.length() < 8) {
-            email.setError("Recquired (Minimum 8 characters)");
+            password.setError("Recquired (Minimum 8 characters)");
         }
     }
 
@@ -132,50 +136,60 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             finish();
         }
         if(v.getId() == R.id.create_account){
-
-            String names = name.getText().toString();
-            String emails = email.getText().toString();
-            String passwords = password.getText().toString();
-            Log.d(TAG, "Create Account:" + emails);
-            if(names.isEmpty()){
-                name.setError("Please enter your name.");
-                return;
-            }
-            if(!emails.contains("@") && !emails.contains(".com") && emails.length() <10){
-                email.setError("Enter a valid email address.");
-                return;
-            }
-            if(passwords.length() < 8){
-                password.setError("Password must be at least 8 characters");
-                return;
-            }
-
-            final ProgressDialog progressDialog = new ProgressDialog(SignUp.this,
-                    R.style.Theme_AppCompat_DayNight_Dialog_Alert);
-            progressDialog.setIndeterminate(true);
-            progressDialog.setMessage("Creating Account...");
-            progressDialog.show();
-
-            mAuth.createUserWithEmailAndPassword(emails, passwords)
-                    .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
-
-                            // If sign in fails, display a message to the user. If sign in succeeds
-                            // the auth state listener will be notified and logic to handle the
-                            // signed in user can be handled in the listener.
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(SignUp.this, "Account Creation Failed",
-                                        Toast.LENGTH_SHORT).show();
-                            }
-                            progressDialog.dismiss();
-                        }
-                    });
-            finish();
+            createacc();
         }
 
     }
 
+    private void createacc(){
+        final String names = name.getText().toString();
+        final String emails = email.getText().toString();
+        String passwords = password.getText().toString();
+        Log.d(TAG, "Create Account:" + emails);
+        if(names.isEmpty()){
+            name.setError("Please enter your name.");
+            return;
+        }
+        if(!emails.contains("@") && !emails.contains(".com") && emails.length() <10 && emails.isEmpty()){
+            email.setError("Enter a valid email address.");
+            return;
+        }
+        if(passwords.length() < 8){
+            password.setError("Password must be at least 8 characters");
+            return;
+        }
 
+        final ProgressDialog progressDialog = new ProgressDialog(SignUp.this,
+                R.style.Theme_AppCompat_DayNight_Dialog_Alert);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Creating Account...");
+        progressDialog.show();
+
+        mAuth.createUserWithEmailAndPassword(emails, passwords)
+                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        Log.d(TAG, "createUserWithEmail:onComplete:" + task.isSuccessful());
+
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(SignUp.this, "Account Creation Failed",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        String uid = task.getResult().getUser().getUid();
+                        HashMap<String, String> userMap=new HashMap<>();
+                        userMap.put("email",emails);
+                        userMap.put("name",names);
+                        FirebaseDatabase.getInstance().getReference("users").child(uid).setValue(userMap, new DatabaseReference.CompletionListener() {
+                            @Override
+                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
+                                if (databaseError==null){
+                                    progressDialog.dismiss();
+                                }
+                            }
+                        });
+
+                    }
+                });
+        finish();
+    }
 }
