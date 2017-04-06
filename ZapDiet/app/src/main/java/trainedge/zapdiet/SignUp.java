@@ -150,7 +150,7 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             name.setError("Please enter your name.");
             return;
         }
-        if(!emails.contains("@") && !emails.contains(".com") && emails.length() <10 && emails.isEmpty()){
+        if(!emails.contains("@") || emails.length() <10 || emails.isEmpty()){
             email.setError("Enter a valid email address.");
             return;
         }

@@ -88,23 +88,23 @@ public class Feedback extends AppCompatActivity implements View.OnClickListener,
     private void submitf(){
         String str1 = usermess.getText().toString();
         String str2 = uremail.getText().toString();
-        if(str1.isEmpty()){
-            usermess.setError("Recquired");
-            return;
-        }
-        if(!str2.contains("@") && !str2.contains(".com") && str2.isEmpty() && str2.length() < 10){
-            uremail.setError("Please enter a valid email address.");
-            return;
-        }
         if(rating == 0){
             Toast.makeText(Feedback.this, "Please rate our app first.", Toast.LENGTH_LONG).show();
             return;
         }
+        if(str1.isEmpty()){
+            usermess.setError("Recquired");
+            return;
+        }
+        if(!str2.contains("@") || str2.isEmpty() || str2.length() < 10){
+            uremail.setError("Please enter a valid email address.");
+            return;
+        }
         Intent emailint = new Intent(Intent.ACTION_SEND);
         emailint.setType("text/html");
-        emailint.putExtra(Intent.EXTRA_EMAIL,new String[]{"rpandey516@gmail.com"});
+        emailint.putExtra(Intent.EXTRA_EMAIL,new String[]{"sajanuprari31@gmail.com"});
         emailint.putExtra(Intent.EXTRA_SUBJECT,"Feedback");
-        emailint.putExtra(Intent.EXTRA_TEXT,"Hi,\n \t You have got a feedback e-mail.Your app has been rated "+rating+" star by the user. And user's thought about the app are - \""+usermess.getText().toString()+"\". To write him back please use the email \""+uremail.getText().toString()+"\". \n\tHave a nice day. \n\tThank You.");
-        startActivity(Intent.createChooser(emailint,"Send Feedback"));
+        emailint.putExtra(Intent.EXTRA_TEXT,"Hi,\n \t You have got a feedback. Your app has been rated "+rating+" star by the user. And user's thought about the app are - \""+usermess.getText().toString()+"\". To write him back please use the email \""+uremail.getText().toString()+"\". \n\tHave a nice day. \n\tThank You.");
+        startActivity(Intent.createChooser(emailint,"Send feedback using..."));
     }
 }

@@ -38,6 +38,7 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
         Button shr = (Button) findViewById(R.id.share);
         Button abt = (Button) findViewById(R.id.about);
         Button lgt = (Button) findViewById(R.id.logout);
+
         notif = (Switch) findViewById(R.id.notif);
         mAuth = FirebaseAuth.getInstance();
         accdet.setOnClickListener(this);
@@ -98,9 +99,20 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
             Intent privintent = new Intent(Settings.this,priv_pol.class);
             startActivity(privintent);
         }
-       /* if (v.getId() == R.id.share) {
+        if (v.getId() == R.id.share) {
+            try {
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_SUBJECT, "ZapDiet");
+                String sAux = "\nYour friend invited you to join our app.\n\n";
+                sAux = sAux + "https://play.google.com/store/apps/details?id=ZapDiet \n\nPlease give a try to our app.\n\n\n Thank You.";
+                i.putExtra(Intent.EXTRA_TEXT, sAux);
+                startActivity(Intent.createChooser(i, "Share using..."));
+            } catch(Exception e) {
+                //e.toString();
+            }
 
-        }*/
+        }
         if (v.getId() == R.id.logout) {
             mAuth.signOut();
         }

@@ -87,6 +87,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
+                    Toast.makeText(login.this, "Please login in order to proceed.", Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -126,7 +127,6 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
         email.addTextChangedListener(GenericTextWatcher);
         pass.addTextChangedListener(GenericTextWatcher);
 
-        Toast.makeText(login.this, "Please login in order to proceed.", Toast.LENGTH_LONG).show();
 
     }
 
@@ -268,20 +268,16 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private void forgot(){
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        final TextView tt = new TextView(this);
         final EditText et = new EditText(this);
-        LinearLayout ll= new LinearLayout(login.this);
-        ll.setOrientation(LinearLayout.VERTICAL);
-        ll.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,LinearLayout.LayoutParams.WRAP_CONTENT));
-        ll.addView(tt);
-        ll.addView(et);
-        String str = "Please enter your authorized email address.";
-        tt.setText(str);
-        tt.setTextSize(14);
+        LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        et.setLayoutParams(lp);
         // set prompts.xml to alertdialog builder
-        alertDialogBuilder.setView(ll);
+        alertDialogBuilder.setView(et);
+        alertDialogBuilder.setIcon(R.drawable.ic_vpn_key_black_24dp);
+        alertDialogBuilder.setTitle("Forgot Password!");
+        alertDialogBuilder.setMessage("Please enter your authorized email address.");
         // set dialog message
-        alertDialogBuilder.setCancelable(false).setPositiveButton("Send", new DialogInterface.OnClickListener() {
+        alertDialogBuilder.setPositiveButton("Send", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 String emailAddress = et.getText().toString();
                 mAuth.sendPasswordResetEmail(emailAddress)
@@ -300,6 +296,11 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         });
             }
         });
+        alertDialogBuilder.setNegativeButton("Cancel",new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog,int which){
+            dialog.cancel();
+            }
+        });
         // create alert dialog
         AlertDialog alertDialog = alertDialogBuilder.create();
         // show it
@@ -309,7 +310,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private void mysignin(){
         String emai = email.getText().toString();
         String pasw = pass.getText().toString();
-        if(emai.length() < 10 && !emai.contains("@") && !emai.contains(".com") && emai.isEmpty()){
+        if(emai.length() < 10 || !emai.contains("@") || emai.isEmpty()){
             email.setError("Enter a valid email");
             return;
         }
