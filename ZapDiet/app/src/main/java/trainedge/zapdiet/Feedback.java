@@ -77,7 +77,7 @@ public class Feedback extends AppCompatActivity implements View.OnClickListener,
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         String email = s.toString();
-        if (email.isEmpty() && email.length() < 10 && !email.contains("@") && !email.contains(".com")) {
+        if (email.isEmpty() || email.length() < 10 || !email.contains("@") || !email.contains(".com")) {
             uremail.setError("Please give a correct email address.");
         }
     }

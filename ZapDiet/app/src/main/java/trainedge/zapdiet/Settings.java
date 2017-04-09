@@ -13,6 +13,8 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.Toast;
 
+import com.facebook.AccessToken;
+import com.facebook.login.LoginManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
@@ -115,6 +117,8 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
         }
         if (v.getId() == R.id.logout) {
             mAuth.signOut();
+            LoginManager.getInstance().logOut();
+            AccessToken.setCurrentAccessToken(null);
         }
     }
 
