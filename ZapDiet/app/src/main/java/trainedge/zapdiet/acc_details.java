@@ -55,18 +55,19 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
 
     private void updateui(FirebaseUser user) {
         if (user != null) {
+
             for (UserInfo profile : user.getProviderData()) {
-                // Id of the provider (ex: google.com)
-                String providerId = profile.getProviderId();
-                // UID specific to the provider
-
-                //String uid = profile.getUid();
-
-                // Name, email address, and profile photo Url
                 String name = profile.getDisplayName();
+                uname.setText(name);
                 String email = profile.getEmail();
+                umail.setText(email);
                 Uri photoUrl = profile.getPhotoUrl();
+                Picasso.with(this)
+                        .load(photoUrl)
+                        .transform(new CircleTransform())
+                        .into(profile_pic);
 
+                String providerId = profile.getProviderId();
                 if(providerId.contains("google.com") || providerId.contains("facebook.com")){
                     verify.setVisibility(View.GONE);
                 }
@@ -77,12 +78,7 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
                     }
                 }
 
-                    uname.setText(name);
-                    umail.setText(email);
-                Picasso.with(this)
-                        .load(photoUrl)
-                        .transform(new CircleTransform())
-                        .into(profile_pic);
+
             }
         }
 

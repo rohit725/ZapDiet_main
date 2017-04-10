@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background_login"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="trainedge.zapdiet.login"
-    tools:showIn="@layout/activity_login"
+    tools:layout_editor_absoluteX="0dp"
     tools:layout_editor_absoluteY="25dp"
-    tools:layout_editor_absoluteX="0dp">
+    tools:showIn="@layout/activity_login">
 
     <ScrollView
         android:layout_width="0dp"
@@ -64,7 +65,7 @@
                 android:layout_marginBottom="24dp"
                 android:layout_marginLeft="190dp"
                 android:text="Forgot Password?"
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/com_facebook_button_background_color_focused" />
 
             <Button
                 android:id="@+id/SignIn"
@@ -85,7 +86,7 @@
                 android:layout_marginTop="8dp"
                 android:gravity="center"
                 android:text="No Account Yet? Create One."
-                android:textColor="@color/colorPrimary" />
+                android:textColor="@color/com_facebook_button_background_color_focused" />
 
             <TextView
                 android:id="@+id/textView"
@@ -104,7 +105,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/google_login"
-                android:paddingLeft="10dp"
+                android:drawableLeft="@drawable/google_plus"
+                android:gravity="center"
+                android:paddingLeft="5dp"
                 android:paddingRight="10dp"
                 android:text="Continue With Google"
                 android:textAppearance="@style/TextAppearance.AppCompat"
