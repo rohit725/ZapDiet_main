@@ -1,21 +1,28 @@
 package trainedge.zapdiet;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -23,7 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.UserInfo;
+
 
 public class acc_details extends AppCompatActivity implements View.OnClickListener {
 
@@ -32,6 +39,8 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
     private ImageView profile_pic;
     private TextView umail;
     private Button verify;
+    private static final int REQUEST_CAMERA = 1;
+    private static final int SELECT_FILE = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,44 +54,36 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
         profile_pic = (ImageView) findViewById(R.id.user_profile_photo);
         uname = (TextView) findViewById(R.id.user_profile_name);
         umail = (TextView) findViewById(R.id.user_email);
+        ImageView editn = (ImageView) findViewById(R.id.edit_name);
         verify = (Button) findViewById(R.id.verifyacc);
-        FirebaseUser user1 = FirebaseAuth.getInstance().getCurrentUser();
-        updateui(user1);
 
+        updateui(FirebaseAuth.getInstance().getCurrentUser());
         verify.setOnClickListener(this);
-
+        editn.setOnClickListener(this);
+        profile_pic.setOnClickListener(this);
+        verify.setVisibility(View.GONE);
     }
 
     private void updateui(FirebaseUser user) {
-        if (user != null) {
+        String name = user.getDisplayName();
+        String email = user.getEmail();
+        Uri photoUrl = user.getPhotoUrl();
+        String providerId = user.getProviderId();
+        uname.setText(name);
+        umail.setText(email);
+        Picasso.with(this)
+                .load(photoUrl)
+                .transform(new CircleTransform())
+                .into(profile_pic);
 
-            for (UserInfo profile : user.getProviderData()) {
-                String name = profile.getDisplayName();
-                uname.setText(name);
-                String email = profile.getEmail();
-                umail.setText(email);
-                Uri photoUrl = profile.getPhotoUrl();
-                Picasso.with(this)
-                        .load(photoUrl)
-                        .transform(new CircleTransform())
-                        .into(profile_pic);
-
-                String providerId = profile.getProviderId();
-                if(providerId.contains("google.com") || providerId.contains("facebook.com")){
-                    verify.setVisibility(View.GONE);
-                }
-                else{
-                    boolean emailVerified = user.isEmailVerified();
-                    if(emailVerified){
-                        verify.setVisibility(View.GONE);
-                    }
-                }
-
-
+        if(providerId.contains("email")) {
+            boolean emailVerified = user.isEmailVerified();
+            if (!emailVerified) {
+                verify.setVisibility(View.VISIBLE);
             }
         }
-
     }
+
 
     private class CircleTransform implements Transformation {
         @Override
@@ -112,10 +113,12 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
             squaredBitmap.recycle();
             return bitmap;
         }
+
         @Override
         public String key() {
             return "circle";
         }
+
     }
 
     @Override
@@ -123,6 +126,12 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.verifyacc:
                 sendEmailVerification();
+                break;
+            case R.id.user_profile_photo:
+                showFileChooser();
+                break;
+            case R.id.edit_name:
+                forName();
                 break;
         }
 
@@ -155,5 +164,100 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
                     }
                 });
         // [END send_email_verification]
+    }
+
+    private void updateProfile(String name,Uri photourl){
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(name)
+                .setPhotoUri(photourl)
+                .build();
+
+        user.updateProfile(profileUpdates)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "User profile updated.");
+                            Toast.makeText(acc_details.this, "User Profile Updated", Toast.LENGTH_SHORT).show();
+                            updateui(FirebaseAuth.getInstance().getCurrentUser());
+                        }
+                    }
+                });
+    }
+
+    private void showFileChooser(){
+        final CharSequence[] items = {"Take Photo", "Choose from Gallery", "Cancel"};
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(acc_details.this);
+        builder.setTitle("Add Profile Pic");
+        builder.setItems(items, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int item) {
+
+                if (items[item].equals("Take Photo")) {
+                    Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    startActivityForResult(intent, REQUEST_CAMERA);
+                } else if (items[item].equals("Choose from Gallery")) {
+                    /*Intent intent = new Intent(
+                            Intent.ACTION_PICK,
+                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);*/
+                    Intent intent = new Intent();
+                    intent.setType("image/*");
+                    intent.setAction(Intent.ACTION_GET_CONTENT);
+                    startActivityForResult(intent,SELECT_FILE);
+                } else if (items[item].equals("Cancel")) {
+                    dialog.dismiss();
+                }
+            }
+        });
+        builder.show();
+    }
+
+    private void forName(){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        final EditText et = new EditText(this);
+        LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        et.setLayoutParams(lp);
+        alertDialogBuilder.setView(et);
+        alertDialogBuilder.setTitle("Enter your name.");
+        alertDialogBuilder.setPositiveButton("Change", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                String username = et.getText().toString();
+                Uri url= FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
+                updateProfile(username, url);
+                updateui(FirebaseAuth.getInstance().getCurrentUser());
+            }
+        });
+        alertDialogBuilder.setNegativeButton("Cancel",new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog,int which){
+                dialog.cancel();
+            }
+        });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        switch(requestCode) {
+            case 0:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                    updateProfile(username, selectedImage);
+                }
+
+                break;
+            case 1:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
+                    updateProfile(username, selectedImage);
+                }
+                break;
+        }
+        updateui(FirebaseAuth.getInstance().getCurrentUser());
     }
 }
