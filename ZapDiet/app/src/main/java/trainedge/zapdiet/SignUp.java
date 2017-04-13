@@ -20,21 +20,15 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-
-import java.util.HashMap;
-
 
 public class SignUp extends AppCompatActivity implements View.OnClickListener{
 
     public static final String TAG = "SignUp";
     private EditText password;
     private EditText email;
-    private EditText name;
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
+    private EditText confirm_pass;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,15 +38,14 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
         setSupportActionBar(toolbar);
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
-        name = (EditText) findViewById(R.id.input_name);
         email = (EditText) findViewById(R.id.input_email);
         password = (EditText) findViewById(R.id.input_password);
+        confirm_pass = (EditText) findViewById(R.id.confirm);
         Button btn = (Button) findViewById(R.id.create_account);
         TextView txtview = (TextView) findViewById(R.id.link_login);
 
         btn.setOnClickListener(this);
         txtview.setOnClickListener(this);
-        name.addTextChangedListener(GenericTextWatcher);
         email.addTextChangedListener(GenericTextWatcher);
         password.addTextChangedListener(GenericTextWatcher);
         mAuth = FirebaseAuth.getInstance();
@@ -102,21 +95,11 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
             {
                 pass_onTextChanged(s);
             }
-            else if(name.getText().hashCode() == s.hashCode()){
-                name_onTextChanged(s);
-            }
         }
         @Override
         public void afterTextChanged(Editable s) {}
 
     };
-
-    private void name_onTextChanged(CharSequence s) {
-            String names = s.toString();
-            if (names.isEmpty() && names.length() < 3) {
-                name.setError("Recquired (Minimum 3 characters)");
-            }
-    }
 
     private void email_onTextChanged(CharSequence s) {
         String emails = s.toString();
@@ -144,20 +127,20 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
     }
 
     private void createacc(){
-        final String names = name.getText().toString();
-        final String emails = email.getText().toString();
+        String conf = confirm_pass.getText().toString();
+        String emails = email.getText().toString();
         String passwords = password.getText().toString();
         Log.d(TAG, "Create Account:" + emails);
-        if(names.isEmpty()){
-            name.setError("Please enter your name.");
-            return;
-        }
         if(!emails.contains("@") || emails.length() <10 || emails.isEmpty()){
             email.setError("Enter a valid email address.");
             return;
         }
         if(passwords.length() < 8){
             password.setError("Password must be at least 8 characters");
+            return;
+        }
+        if(!passwords.equals(conf)){
+            confirm_pass.setError("Password didn't match");
             return;
         }
 
@@ -177,21 +160,10 @@ public class SignUp extends AppCompatActivity implements View.OnClickListener{
                             Toast.makeText(SignUp.this, "Account Creation Failed",
                                     Toast.LENGTH_SHORT).show();
                         }
-                        String uid = task.getResult().getUser().getUid();
-                        HashMap<String, String> userMap=new HashMap<>();
-                        userMap.put("email",emails);
-                        userMap.put("name",names);
-                        FirebaseDatabase.getInstance().getReference("users").child(uid).setValue(userMap, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(DatabaseError databaseError, DatabaseReference databaseReference) {
-                                if (databaseError==null){
-                                    progressDialog.dismiss();
-                                }
-                            }
-                        });
-
+                        progressDialog.dismiss();
                     }
                 });
         finish();
     }
+
 }

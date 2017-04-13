@@ -22,6 +22,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.UserInfo;
 import com.google.firebase.auth.UserProfileChangeRequest;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -56,32 +57,37 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
         umail = (TextView) findViewById(R.id.user_email);
         ImageView editn = (ImageView) findViewById(R.id.edit_name);
         verify = (Button) findViewById(R.id.verifyacc);
-
-        updateui(FirebaseAuth.getInstance().getCurrentUser());
         verify.setOnClickListener(this);
         editn.setOnClickListener(this);
         profile_pic.setOnClickListener(this);
         verify.setVisibility(View.GONE);
+
+        updateui(FirebaseAuth.getInstance().getCurrentUser());
     }
 
     private void updateui(FirebaseUser user) {
         String name = user.getDisplayName();
         String email = user.getEmail();
         Uri photoUrl = user.getPhotoUrl();
-        String providerId = user.getProviderId();
         uname.setText(name);
         umail.setText(email);
         Picasso.with(this)
                 .load(photoUrl)
+                .placeholder(R.drawable.default_profile)
+                .error(R.drawable.default_profile)
                 .transform(new CircleTransform())
                 .into(profile_pic);
 
-        if(providerId.contains("email")) {
-            boolean emailVerified = user.isEmailVerified();
-            if (!emailVerified) {
-                verify.setVisibility(View.VISIBLE);
+        for (UserInfo profile : user.getProviderData()) {
+            // Id of the provider (ex: google.com)
+            String providerId = profile.getProviderId();
+            if(providerId.contains("password")) {
+                boolean emailVerified = user.isEmailVerified();
+                if (!emailVerified) {
+                    verify.setVisibility(View.VISIBLE);
+                }
             }
-        }
+        };
     }
 
 
@@ -199,9 +205,6 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
                     Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                     startActivityForResult(intent, REQUEST_CAMERA);
                 } else if (items[item].equals("Choose from Gallery")) {
-                    /*Intent intent = new Intent(
-                            Intent.ACTION_PICK,
-                            MediaStore.Images.Media.EXTERNAL_CONTENT_URI);*/
                     Intent intent = new Intent();
                     intent.setType("image/*");
                     intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -242,7 +245,7 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
         switch(requestCode) {
-            case 0:
+            case 1:
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = imageReturnedIntent.getData();
                     String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();
@@ -250,7 +253,7 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
                 }
 
                 break;
-            case 1:
+            case 2:
                 if(resultCode == RESULT_OK){
                     Uri selectedImage = imageReturnedIntent.getData();
                     String username = FirebaseAuth.getInstance().getCurrentUser().getDisplayName();

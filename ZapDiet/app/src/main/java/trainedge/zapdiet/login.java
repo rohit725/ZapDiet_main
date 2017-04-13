@@ -11,11 +11,13 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -55,6 +57,8 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private CallbackManager mCallbackManager;
     private EditText email;
     private EditText pass;
+    static int flag = 1;
+    private ImageView show_hide;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,7 +93,6 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
-                    Toast.makeText(login.this, "Please login in order to proceed.", Toast.LENGTH_LONG).show();
                 }
             }
         };
@@ -109,7 +112,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
             @Override
             public void onCancel() {
                 Log.d(TAG, "facebook:onCancel");
-                // ...
+                Toast.makeText(login.this, "Login canceled through facebook", Toast.LENGTH_LONG).show();
             }
 
             @Override
@@ -119,6 +122,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
             }
         });
         TextView signup = (TextView) findViewById(R.id.SignUp);
+        show_hide = (ImageView) findViewById(R.id.show_password);
         Button sigin = (Button) findViewById(R.id.SignIn);
         email = (EditText)findViewById(R.id.Email1);
         pass = (EditText) findViewById(R.id.Password);
@@ -126,6 +130,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
         signup.setOnClickListener(this);
         sigin.setOnClickListener(this);
         fpass.setOnClickListener(this);
+        show_hide.setOnClickListener(this);
         email.addTextChangedListener(GenericTextWatcher);
         pass.addTextChangedListener(GenericTextWatcher);
 
@@ -209,6 +214,21 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
             case R.id.forgot:
                 forgot();
                 break;
+            case R.id.show_password:
+                switch (flag) {
+                    case 1:
+                        pass.setTransformationMethod(null);
+                        show_hide.setImageResource(R.drawable.show_password);
+                        flag = 2;
+                        break;
+
+                    case 2:
+                        pass.setTransformationMethod(new PasswordTransformationMethod());
+                        show_hide.setImageResource(R.drawable.hide_password);
+                        flag = 1;
+                        break;
+                }
+                break;
         }
     }
 
@@ -226,6 +246,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                             Toast.makeText(login.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
+
                     }
                 });
     }

@@ -1,6 +1,11 @@
 package trainedge.zapdiet;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapShader;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,9 +16,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 public class home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private View headerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +48,37 @@ public class home extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        headerView = navigationView.getHeaderView(0);
+        updateui(headerView);
+        LinearLayout ll = (LinearLayout) headerView.findViewById(R.id.llout);
+        ll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent accont = new Intent(home.this,acc_details.class);
+                startActivity(accont);
+            }
+        });
+
+    }
+
+    private void updateui(View headerView) {
+        ImageView profile = (ImageView) headerView.findViewById(R.id.profile_pi);
+        TextView nam = (TextView) headerView.findViewById(R.id.nameu);
+        TextView mil = (TextView) headerView.findViewById(R.id.mailu);
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String strname = user.getDisplayName();
+        String strmail = user.getEmail();
+        Uri picurl = user.getPhotoUrl();
+        nam.setText(strname);
+        mil.setText(strmail);
+        Picasso.with(this)
+                .load(picurl)
+                .placeholder(R.drawable.default_profile)
+                .error(R.drawable.default_profile)
+                .transform(new CircleTransform())
+                .into(profile);
+
+
     }
 
     @Override
@@ -90,6 +137,42 @@ public class home extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private class CircleTransform implements Transformation {
+        @Override
+        public Bitmap transform(Bitmap source) {
+            int size = Math.min(source.getWidth(), source.getHeight());
+
+            int x = (source.getWidth() - size) / 2;
+            int y = (source.getHeight() - size) / 2;
+
+            Bitmap squaredBitmap = Bitmap.createBitmap(source, x, y, size, size);
+            if (squaredBitmap != source) {
+                source.recycle();
+            }
+
+            Bitmap bitmap = Bitmap.createBitmap(size, size, source.getConfig());
+
+            Canvas canvas = new Canvas(bitmap);
+            Paint paint = new Paint();
+            BitmapShader shader = new BitmapShader(squaredBitmap,
+                    BitmapShader.TileMode.CLAMP, BitmapShader.TileMode.CLAMP);
+            paint.setShader(shader);
+            paint.setAntiAlias(true);
+
+            float r = size / 2f;
+            canvas.drawCircle(r, r, r, paint);
+
+            squaredBitmap.recycle();
+            return bitmap;
+        }
+
+        @Override
+        public String key() {
+            return "circle";
+        }
+
     }
 
 }

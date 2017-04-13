@@ -38,23 +38,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="72dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="24dp"
+                android:layout_marginBottom="20dp"
                 android:src="@drawable/app_icon1" />
-
-            <EditText
-                android:id="@+id/input_name"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
-                android:hint="Name"
-                android:inputType="textCapWords" />
 
             <EditText
                 android:id="@+id/input_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="16dp"
                 android:layout_marginTop="8dp"
                 android:hint="Email"
                 android:inputType="textEmailAddress" />
@@ -63,10 +54,21 @@
                 android:id="@+id/input_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
+                android:layout_marginBottom="20dp"
                 android:layout_marginTop="8dp"
                 android:hint="Password"
-                android:inputType="textPassword" />
+                android:inputType="textPassword"
+                android:singleLine="true" />
+
+            <EditText
+                android:id="@+id/confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:layout_marginTop="8dp"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:singleLine="true" />
 
             <Button
                 android:id="@+id/create_account"
