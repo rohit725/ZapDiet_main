@@ -18,7 +18,7 @@
         android:layout_width="50dp"
         android:layout_height="70dp"
         android:paddingTop="@dimen/nav_header_vertical_spacing"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         app:srcCompat="@android:drawable/sym_def_app_icon" />
 
     <TextView

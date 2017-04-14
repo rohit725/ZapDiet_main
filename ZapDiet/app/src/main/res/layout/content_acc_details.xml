@@ -38,7 +38,7 @@
         android:background="@drawable/profile_image"
         android:elevation="5dp"
         android:padding="20dp"
-        android:scaleType="centerInside"
+        android:scaleType="centerCrop"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/header_cover_image"
@@ -71,8 +71,7 @@
             android:paddingRight="10dp"
             android:text="Sajan Singh Uprari"
             android:textColor="@color/com_facebook_button_background_color_focused_disabled"
-            android:textSize="20sp"
-            android:textStyle="italic" />
+            android:textSize="20sp" />
 
         <ImageView
             android:id="@+id/edit_name"

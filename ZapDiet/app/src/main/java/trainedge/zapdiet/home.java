@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -26,10 +28,15 @@ import com.google.firebase.auth.FirebaseUser;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
+import trainedge.zapdiet.fragment.ChartFragment;
+import trainedge.zapdiet.fragment.HomeFragment;
+import trainedge.zapdiet.fragment.NutritionalFragment;
+
 public class home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private View headerView;
+    private FragmentManager manager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,6 +46,10 @@ public class home extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("ZapDiet");
 
+        manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.container,new HomeFragment());
+        transaction.commit();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -127,11 +138,17 @@ public class home extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_camera) {
-            // Handle the camera action
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.container,new HomeFragment());
+            transaction.commit();
         }else if (id == R.id.nav_share) {
-
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.container,new ChartFragment());
+            transaction.commit();
         } else if (id == R.id.nav_send) {
-
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.container,new NutritionalFragment());
+            transaction.commit();
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
