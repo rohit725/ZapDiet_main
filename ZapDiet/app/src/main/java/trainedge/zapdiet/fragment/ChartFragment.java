@@ -10,9 +10,7 @@ import android.view.ViewGroup;
 import trainedge.zapdiet.R;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
+
 public class ChartFragment extends Fragment {
 
 

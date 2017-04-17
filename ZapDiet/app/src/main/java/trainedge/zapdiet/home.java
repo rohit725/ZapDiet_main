@@ -31,6 +31,7 @@ import com.squareup.picasso.Transformation;
 import trainedge.zapdiet.fragment.ChartFragment;
 import trainedge.zapdiet.fragment.HomeFragment;
 import trainedge.zapdiet.fragment.NutritionalFragment;
+import trainedge.zapdiet.fragment.userinput;
 
 public class home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -47,15 +48,16 @@ public class home extends AppCompatActivity
         getSupportActionBar().setTitle("ZapDiet");
 
         manager = getSupportFragmentManager();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.container,new HomeFragment());
-        transaction.commit();
+
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
+        drawer.addDrawerListener(toggle);  //set
         toggle.syncState();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.container,new userinput());
+        transaction.commit();
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
@@ -137,19 +139,23 @@ public class home extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
 
-        if (id == R.id.nav_camera) {
+        if (id == R.id.home) {
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.container,new HomeFragment());
             transaction.commit();
-        }else if (id == R.id.nav_share) {
+        }else if (id == R.id.diet) {
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.container,new ChartFragment());
             transaction.commit();
-        } else if (id == R.id.nav_send) {
+        } else if (id == R.id.info) {
             FragmentTransaction transaction = manager.beginTransaction();
             transaction.replace(R.id.container,new NutritionalFragment());
             transaction.commit();
+
         }
+
+        item.setChecked(true);
+        setTitle(item.getTitle());
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
