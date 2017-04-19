@@ -25,6 +25,8 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -55,10 +57,10 @@ public class home extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);  //set
         toggle.syncState();
-        FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.container,new userinput());
-        transaction.commit();
-
+        //DatabaseReference db = FirebaseDatabase.getInstance().getReference();
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.container,new userinput());
+            transaction.commit();
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         headerView = navigationView.getHeaderView(0);
