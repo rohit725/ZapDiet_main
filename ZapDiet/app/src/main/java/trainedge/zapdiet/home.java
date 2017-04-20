@@ -16,6 +16,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -25,8 +26,11 @@ import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -38,8 +42,11 @@ import trainedge.zapdiet.fragment.userinput;
 public class home extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
+    private static final String TAG = "Home Activity" ;
     private View headerView;
     private FragmentManager manager;
+    private DatabaseReference mDatabase;
+    private boolean found;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,21 +57,52 @@ public class home extends AppCompatActivity
         getSupportActionBar().setTitle("ZapDiet");
 
         manager = getSupportFragmentManager();
-
+        found=false;
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);  //set
         toggle.syncState();
-        //DatabaseReference db = FirebaseDatabase.getInstance().getReference();
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.container,new userinput());
-            transaction.commit();
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+        ValueEventListener postListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                // Get Post object and use the values to update the UI
+                String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
+                    if(snapshot.getKey().equals(userId)){
+                        found = true;
+                        FragmentTransaction transaction = manager.beginTransaction();
+                        transaction.replace(R.id.container,new HomeFragment());
+                        transaction.commit();
+                    }
+                }
+                // ...
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        mDatabase.addValueEventListener(postListener);
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         headerView = navigationView.getHeaderView(0);
         updateui(headerView);
+        if(!found){
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.container,new userinput());
+            transaction.commit();
+        }
+        else
+        {
+            Menu menuview = navigationView.getMenu();
+            menuview.getItem(0).setChecked(true);
+        }
         LinearLayout ll = (LinearLayout) headerView.findViewById(R.id.llout);
         ll.setOnClickListener(new View.OnClickListener() {
             @Override

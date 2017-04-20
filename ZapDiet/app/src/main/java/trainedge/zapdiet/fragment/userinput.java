@@ -164,8 +164,11 @@ public class userinput extends Fragment implements AdapterView.OnItemSelectedLis
             }
             else if (age1.getText().hashCode() == s.hashCode())
             {
-                if(Integer.parseInt(s.toString())<12 || Integer.parseInt(s.toString())>100){
-                    age1.setError("Age between 12-100");
+                String agestr =s.toString();
+                if(!agestr.isEmpty()){
+                    if(Integer.parseInt(agestr)<16 || Integer.parseInt(agestr)>100){
+                        age1.setError("Age between 16-100");
+                    }
                 }
             }
             else if(allerg.getText().hashCode() == s.hashCode()){
@@ -237,7 +240,7 @@ public class userinput extends Fragment implements AdapterView.OnItemSelectedLis
                 });
 
         DatabaseReference mDatabase = FirebaseDatabase.getInstance().getReference("users");
-        String userId = mDatabase.push().getKey();
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         User user = new User(gender,ageint,height1,weightfloat,bmi1,allergystr,diseasestr);
         mDatabase.child(userId).setValue(user);
 
