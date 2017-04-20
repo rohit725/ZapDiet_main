@@ -55,7 +55,6 @@ public class home extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("ZapDiet");
-
         manager = getSupportFragmentManager();
         found=false;
 
@@ -64,7 +63,7 @@ public class home extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);  //set
         toggle.syncState();
-        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+        mDatabase = FirebaseDatabase.getInstance().getReference();
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -73,9 +72,6 @@ public class home extends AppCompatActivity
                 for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     if(snapshot.getKey().equals(userId)){
                         found = true;
-                        FragmentTransaction transaction = manager.beginTransaction();
-                        transaction.replace(R.id.container,new HomeFragment());
-                        transaction.commit();
                     }
                 }
                 // ...
@@ -93,15 +89,18 @@ public class home extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
         headerView = navigationView.getHeaderView(0);
         updateui(headerView);
-        if(!found){
+        if(found){
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.container,new userinput());
+            transaction.replace(R.id.container,new HomeFragment());
             transaction.commit();
+            Menu menuview = navigationView.getMenu();
+            menuview.getItem(0).setChecked(true);
         }
         else
         {
-            Menu menuview = navigationView.getMenu();
-            menuview.getItem(0).setChecked(true);
+            FragmentTransaction transaction = manager.beginTransaction();
+            transaction.replace(R.id.container,new userinput());
+            transaction.commit();
         }
         LinearLayout ll = (LinearLayout) headerView.findViewById(R.id.llout);
         ll.setOnClickListener(new View.OnClickListener() {

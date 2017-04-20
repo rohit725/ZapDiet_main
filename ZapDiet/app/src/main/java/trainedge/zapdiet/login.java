@@ -19,6 +19,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import java.io.IOException;
+
 
 public class login extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener, View.OnClickListener {
 
@@ -63,6 +67,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        checkConnection();
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
         GoogleSignIn = (Button) findViewById(R.id.GoogleSignIn);
@@ -228,6 +233,9 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         break;
                 }
                 break;
+            case R.id.retry:
+                checkConnection();
+                break;
         }
     }
 
@@ -366,7 +374,8 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                     }
                 });
     }
-    /*public boolean isOnline() {
+
+    public boolean isOnline() {
         Runtime runtime = Runtime.getRuntime();
         try {
             Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
@@ -377,5 +386,27 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
         catch (InterruptedException e) { e.printStackTrace(); }
 
         return false;
-    }*/
+    }
+
+    public void checkConnection(){
+        ScrollView scroll = (ScrollView) findViewById(R.id.scrollview);
+        ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar2);
+        ImageView noconn = (ImageView) findViewById(R.id.noConnection);
+        Button retr = (Button) findViewById(R.id.retry);
+        retr.setOnClickListener(this);
+        scroll.setVisibility(View.GONE);
+        noconn.setVisibility(View.GONE);
+        retr.setVisibility(View.GONE);
+        if(isOnline()){
+            progress.setVisibility(View.GONE);
+            scroll.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            progress.setVisibility(View.GONE);
+            noconn.setVisibility(View.VISIBLE);
+            retr.setVisibility(View.VISIBLE);
+
+        }
+    }
 }
