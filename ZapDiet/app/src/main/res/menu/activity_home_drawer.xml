@@ -4,7 +4,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/home"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/homeimage"
             android:title="Home" />
     </group>
 
@@ -13,11 +13,11 @@
             <group android:checkableBehavior="single">
                 <item
                     android:id="@+id/diet"
-                    android:icon="@drawable/ic_menu_share"
+                    android:icon="@drawable/diet"
                     android:title="Normal Diets" />
                 <item
                     android:id="@+id/info"
-                    android:icon="@drawable/ic_menu_send"
+                    android:icon="@drawable/ic_info_outline_black_24dp"
                     android:title="Nutritional Information" />
             </group>
         </menu>

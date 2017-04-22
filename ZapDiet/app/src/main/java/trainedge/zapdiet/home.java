@@ -1,5 +1,6 @@
 package trainedge.zapdiet;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -63,7 +64,13 @@ public class home extends AppCompatActivity
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);  //set
         toggle.syncState();
-        mDatabase = FirebaseDatabase.getInstance().getReference();
+        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
+        mDatabase = FirebaseDatabase.getInstance().getReference("users");
+        final ProgressDialog dialog= new ProgressDialog(this);
+        dialog.setCancelable(false);
+        dialog.setMessage("Loading...");
+        dialog.show();
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -74,6 +81,21 @@ public class home extends AppCompatActivity
                         found = true;
                     }
                 }
+                dialog.dismiss();
+                if(found){
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.container,new HomeFragment());
+                    transaction.commit();
+                    //Menu menuview = navigationView.getMenu();
+                    //menuview.getItem(0).setChecked(true);
+                }
+                else
+                {
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.container,new userinput());
+                    transaction.commit();
+                }
+
                 // ...
             }
 
@@ -82,26 +104,12 @@ public class home extends AppCompatActivity
                 // Getting Post failed, log a message
                 Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
                 // ...
+                dialog.dismiss();
             }
         };
         mDatabase.addValueEventListener(postListener);
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
         headerView = navigationView.getHeaderView(0);
         updateui(headerView);
-        if(found){
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.container,new HomeFragment());
-            transaction.commit();
-            Menu menuview = navigationView.getMenu();
-            menuview.getItem(0).setChecked(true);
-        }
-        else
-        {
-            FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.container,new userinput());
-            transaction.commit();
-        }
         LinearLayout ll = (LinearLayout) headerView.findViewById(R.id.llout);
         ll.setOnClickListener(new View.OnClickListener() {
             @Override
