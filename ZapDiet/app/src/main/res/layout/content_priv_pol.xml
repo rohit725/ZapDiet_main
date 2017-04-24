@@ -97,7 +97,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="If you have questions or concerns about these privacy policies; please send us an email at:  sajanuprari31@gmail.com ."
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                android:textColor="@color/colorAccent" />
 
         </LinearLayout>
     </ScrollView>
