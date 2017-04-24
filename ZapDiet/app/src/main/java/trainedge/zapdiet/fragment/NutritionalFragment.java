@@ -1,6 +1,8 @@
 package trainedge.zapdiet.fragment;
 
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -10,14 +12,19 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import trainedge.zapdiet.R;
 
 
 public class NutritionalFragment extends Fragment {
 
-    private ArrayList<HeadingsModel> CategoryList;
+    private List<HeadingsModel> CategoryList;
     private RecyclerView rvCategory;
+
+
+    private NutritionalFragment.OnFragmentInterActionListener mListener;
+
 
     public NutritionalFragment() {
 
@@ -49,8 +56,34 @@ public class NutritionalFragment extends Fragment {
         CategoryList.add(new HeadingsModel("Nuts and Seeds", R.drawable.nuts));
         CategoryList.add(new HeadingsModel("Spices and Herbs", R.drawable.herb));
         CategoryList.add(new HeadingsModel("Vegetables", R.drawable.vegetable));
-        HeadingsAdapter adapter = new HeadingsAdapter(CategoryList);
+        HeadingsAdapter adapter = new HeadingsAdapter(getActivity(), CategoryList);
         rvCategory.setAdapter(adapter);
 
     }
+
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnFragmentInterActionListener) {
+            mListener = (NutritionalFragment.OnFragmentInterActionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+    }
+
+
+    public interface OnFragmentInterActionListener {
+
+
+    }
+
+
 }

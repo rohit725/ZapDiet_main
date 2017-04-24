@@ -41,9 +41,9 @@ import trainedge.zapdiet.fragment.NutritionalFragment;
 import trainedge.zapdiet.fragment.userinput;
 
 public class home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, NutritionalFragment.OnFragmentInterActionListener {
 
-    private static final String TAG = "Home Activity" ;
+    private static final String TAG = "Home Activity";
     private View headerView;
     private FragmentManager manager;
     private DatabaseReference mDatabase;
@@ -57,7 +57,7 @@ public class home extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("ZapDiet");
         manager = getSupportFragmentManager();
-        found=false;
+        found = false;
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -67,7 +67,7 @@ public class home extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
-        final ProgressDialog dialog= new ProgressDialog(this);
+        final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
         dialog.setMessage("Loading...");
         dialog.show();
@@ -76,23 +76,21 @@ public class home extends AppCompatActivity
             public void onDataChange(DataSnapshot dataSnapshot) {
                 // Get Post object and use the values to update the UI
                 String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
-                for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    if(snapshot.getKey().equals(userId)){
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    if (snapshot.getKey().equals(userId)) {
                         found = true;
                     }
                 }
                 dialog.dismiss();
-                if(found){
+                if (found) {
                     FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.container,new HomeFragment());
+                    transaction.replace(R.id.container, new HomeFragment());
                     transaction.commit();
                     //Menu menuview = navigationView.getMenu();
                     //menuview.getItem(0).setChecked(true);
-                }
-                else
-                {
+                } else {
                     FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.container,new userinput());
+                    transaction.replace(R.id.container, new userinput());
                     transaction.commit();
                 }
 
@@ -114,7 +112,7 @@ public class home extends AppCompatActivity
         ll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent accont = new Intent(home.this,acc_details.class);
+                Intent accont = new Intent(home.this, acc_details.class);
                 startActivity(accont);
             }
         });
@@ -167,12 +165,12 @@ public class home extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent settingintent=new Intent(home.this,Settings.class);
+            Intent settingintent = new Intent(home.this, Settings.class);
             startActivity(settingintent);
             return true;
         }
-        if(id == R.id.feedback){
-            Intent feedback=new Intent(home.this,Feedback.class);
+        if (id == R.id.feedback) {
+            Intent feedback = new Intent(home.this, Feedback.class);
             startActivity(feedback);
             return true;
         }
@@ -188,15 +186,15 @@ public class home extends AppCompatActivity
 
         if (id == R.id.home) {
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.container,new HomeFragment());
+            transaction.replace(R.id.container, new HomeFragment());
             transaction.commit();
-        }else if (id == R.id.diet) {
+        } else if (id == R.id.diet) {
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.container,new ChartFragment());
+            transaction.replace(R.id.container, new ChartFragment());
             transaction.commit();
         } else if (id == R.id.info) {
             FragmentTransaction transaction = manager.beginTransaction();
-            transaction.replace(R.id.container,new NutritionalFragment());
+            transaction.replace(R.id.container, new NutritionalFragment());
             transaction.commit();
 
         }

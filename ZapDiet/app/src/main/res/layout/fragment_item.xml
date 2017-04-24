@@ -5,9 +5,10 @@
     tools:context="trainedge.zapdiet.fragment.itemfragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/rv_itm"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
-
+        tools:listitem="@layout/simple_nutritional_item" />
 </FrameLayout>
