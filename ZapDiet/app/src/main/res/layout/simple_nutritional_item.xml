@@ -10,7 +10,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/selectable_background1">
+        android:foreground="@drawable/selectable_background1">
 
         <TextView
             android:id="@+id/itm_name"
@@ -23,6 +23,14 @@
             android:text="item name"
             android:textSize="18sp"
             android:textStyle="bold" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_alignBottom="@+id/itm_name"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:background="#a7a7a7" />
 
         <TextView
             android:id="@+id/textView19"

@@ -2,6 +2,7 @@ package trainedge.zapdiet.fragment;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -19,6 +20,7 @@ import trainedge.zapdiet.R;
 class HeadingsAdapter extends RecyclerView.Adapter<HeadingHolder> {
     private List<HeadingsModel> CategoryList;
     Context context;
+    private SharedPreferences preferences;
 
     public HeadingsAdapter(Context context, List<HeadingsModel> categoryList) {
         CategoryList = categoryList;
@@ -42,15 +44,24 @@ class HeadingsAdapter extends RecyclerView.Adapter<HeadingHolder> {
         holder.rcview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                itemfragment item = itemfragment.newInstance(str);
-
-                //Transaction Remaining....
-                FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
-                FragmentTransaction transaction = manager.beginTransaction();
-                transaction.replace(R.id.container, item);
-                transaction.addToBackStack("list");
-                transaction.commit();
-
+                preferences = context.getSharedPreferences("pref", Context.MODE_PRIVATE);
+                String inthrough=preferences.getString("InThrough","Default").toString();
+                if(inthrough.contains("NutritionalFragment")){
+                    itemfragment item = itemfragment.newInstance(str);
+                    FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.container, item);
+                    transaction.addToBackStack("list");
+                    transaction.commit();
+                }
+                else if(inthrough.contains("ChartFragment")){
+                    ChartitemFragment item = ChartitemFragment.newInstance(str);
+                    FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.container, item);
+                    transaction.addToBackStack("list");
+                    transaction.commit();
+                }
             }
         });
     }

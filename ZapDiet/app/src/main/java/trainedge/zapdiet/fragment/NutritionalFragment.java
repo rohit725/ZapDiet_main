@@ -2,6 +2,7 @@ package trainedge.zapdiet.fragment;
 
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -24,6 +25,7 @@ public class NutritionalFragment extends Fragment {
 
 
     private NutritionalFragment.OnFragmentInterActionListener mListener;
+    private SharedPreferences preferences;
 
 
     public NutritionalFragment() {
@@ -34,12 +36,18 @@ public class NutritionalFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_nutritional, container, false);
+        preferences = this.getActivity().getSharedPreferences("pref", Context.MODE_PRIVATE);
 
         CategoryList = new ArrayList<>();
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("InThrough","NutritionalFragment");
+        editor.apply();
 
         rvCategory = (RecyclerView) view.findViewById(R.id.myrecycle);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
         rvCategory.setLayoutManager(manager);
+
 
         generateCategories();
 
@@ -81,8 +89,6 @@ public class NutritionalFragment extends Fragment {
 
 
     public interface OnFragmentInterActionListener {
-
-
     }
 
 

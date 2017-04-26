@@ -1,8 +1,10 @@
 package trainedge.zapdiet.fragment;
 
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,7 +39,7 @@ public class itemfragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item, container, false);
+        final View view = inflater.inflate(R.layout.fragment_item, container, false);
 
         InfoList = new ArrayList<>();
         dbinstance = FirebaseDatabase.getInstance();
@@ -50,7 +52,7 @@ public class itemfragment extends Fragment {
                     for(DataSnapshot snapshot:dataSnapshot.getChildren()){
                     InfoList.add(new InfoModel(snapshot));
                     }
-                    Toast.makeText(getContext(), "Data Loaded.", Toast.LENGTH_SHORT).show();
+                    Snackbar.make(view,"Data shown here is for 100 gram each.",Snackbar.LENGTH_LONG).show();
                 }
                 else if(InfoList.size() == 0){
                     Toast.makeText(getContext(), "no data found", Toast.LENGTH_SHORT).show();

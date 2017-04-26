@@ -1,0 +1,138 @@
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    app:cardElevation="2dp"
+    tools:context="trainedge.zapdiet.fragment.ChartitemFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp">
+
+        <TextView
+            android:id="@+id/dietfor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/view"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center_horizontal"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:text="Diet Chart"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="34dp"
+            android:background="@android:color/darker_gray" />
+
+        <TextView
+            android:id="@+id/textView24"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="46dp"
+            android:gravity="center"
+            android:text="Breakfast"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/breakfast"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/textView24"
+            android:layout_alignBottom="@+id/textView24"
+            android:layout_alignParentEnd="true"
+            android:layout_marginRight="8dp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView25"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/breakfast"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="30dp"
+            android:text="Morning Snacks"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/morn_snacks"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/breakfast"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="30dp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView27"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/morn_snacks"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="30dp"
+            android:text="Lunch"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/lunch"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/morn_snacks"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="30dp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView29"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/lunch"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="30dp"
+            android:text="Evening Snacks"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/evening_snacks"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/lunch"
+            android:layout_below="@+id/lunch"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="30dp"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/textView31"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/evening_snacks"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="30dp"
+            android:text="Dinner"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/dinner"
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/evening_snacks"
+            android:layout_marginRight="8dp"
+            android:layout_marginTop="30dp"
+            android:text="TextView" />
+    </RelativeLayout>
+
+</android.support.v7.widget.CardView>

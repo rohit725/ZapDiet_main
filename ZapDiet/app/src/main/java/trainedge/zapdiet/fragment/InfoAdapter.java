@@ -34,10 +34,10 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoHolder> {
         //still remained
         final InfoModel InfoModel = infolst.get(position);
         holder.itmnam.setText(InfoModel.item);
-        holder.fat.setText(InfoModel.fat);
+        holder.fat.setText(InfoModel.fat+"gm");
         holder.kcal.setText(InfoModel.cal);
-        holder.proteins.setText(InfoModel.protein);
-        holder.carb.setText(InfoModel.carb);
+        holder.proteins.setText(InfoModel.protein+"gm");
+        holder.carb.setText(InfoModel.carb+"gm");
     }
 
     @Override

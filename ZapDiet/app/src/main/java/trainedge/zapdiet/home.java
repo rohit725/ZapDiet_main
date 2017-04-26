@@ -36,12 +36,13 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import trainedge.zapdiet.fragment.ChartFragment;
+import trainedge.zapdiet.fragment.ChartitemFragment;
 import trainedge.zapdiet.fragment.HomeFragment;
 import trainedge.zapdiet.fragment.NutritionalFragment;
 import trainedge.zapdiet.fragment.userinput;
 
 public class home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, NutritionalFragment.OnFragmentInterActionListener {
+        implements NavigationView.OnNavigationItemSelectedListener, NutritionalFragment.OnFragmentInterActionListener, ChartFragment.OnFragmentInterActionListener{
 
     private static final String TAG = "Home Activity";
     private View headerView;
