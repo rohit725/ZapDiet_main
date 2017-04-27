@@ -30,6 +30,7 @@ public class itemfragment extends Fragment {
     private DatabaseReference dbref;
     private String nutri;
     private String val;
+    private String searchstr;
 
     public itemfragment() {
 
@@ -43,27 +44,28 @@ public class itemfragment extends Fragment {
 
         InfoList = new ArrayList<>();
         dbinstance = FirebaseDatabase.getInstance();
-        dbref = dbinstance.getReference("Nutritional_Info").child(val);
-        dbref.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                InfoList.clear();
-                if (dataSnapshot.hasChildren()) {
-                    for(DataSnapshot snapshot:dataSnapshot.getChildren()){
-                    InfoList.add(new InfoModel(snapshot));
+        if(!(val == null)) {
+            dbref = dbinstance.getReference("Nutritional_Info").child(val);
+            dbref.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    InfoList.clear();
+                    if (dataSnapshot.hasChildren()) {
+                        for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                            InfoList.add(new InfoModel(snapshot));
+                        }
+                        Snackbar.make(view, "Data shown here is for 100 gram each.", Snackbar.LENGTH_LONG).show();
+                    } else if (InfoList.size() == 0) {
+                        Toast.makeText(getContext(), "no data found", Toast.LENGTH_SHORT).show();
                     }
-                    Snackbar.make(view,"Data shown here is for 100 gram each.",Snackbar.LENGTH_LONG).show();
                 }
-                else if(InfoList.size() == 0){
-                    Toast.makeText(getContext(), "no data found", Toast.LENGTH_SHORT).show();
-                }
-            }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Toast.makeText(getContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        });
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    Toast.makeText(getContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
 
         rvItem = (RecyclerView) view.findViewById(R.id.rv_itm);
         LinearLayoutManager manager = new LinearLayoutManager(getContext());
@@ -115,6 +117,42 @@ public class itemfragment extends Fragment {
             else if(nutri.contains("Vegetables")){
                 val = "Vegetables";
             }
+            else{
+                searchstr = nutri;
+            }
         }
+    }
+
+    public void savedata(final String str){
+        searchstr = str;
+        dbref = dbinstance.getReference("Nutritional_Info");
+        dbref.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                InfoList.clear();
+                if (dataSnapshot.hasChildren()) {
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        for(DataSnapshot snapshot1 : snapshot.getChildren()){
+                            if(snapshot1.child("Item").getValue().toString().contains(str)){
+                                InfoList.add(new InfoModel(snapshot1));
+                            }
+                        }
+                    }
+                } else if (InfoList.size() == 0) {
+                    Toast.makeText(getContext(), "no data found", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(getContext(), databaseError.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+        rvItem = (RecyclerView) getView().findViewById(R.id.rv_itm);
+        LinearLayoutManager manager = new LinearLayoutManager(getContext());
+        rvItem.setLayoutManager(manager);
+        InfoAdapter adapter = new InfoAdapter(getActivity(), InfoList);
+        rvItem.setAdapter(adapter);
+
     }
 }

@@ -10,12 +10,14 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -39,6 +41,7 @@ import trainedge.zapdiet.fragment.ChartFragment;
 import trainedge.zapdiet.fragment.ChartitemFragment;
 import trainedge.zapdiet.fragment.HomeFragment;
 import trainedge.zapdiet.fragment.NutritionalFragment;
+import trainedge.zapdiet.fragment.itemfragment;
 import trainedge.zapdiet.fragment.userinput;
 
 public class home extends AppCompatActivity
@@ -49,6 +52,7 @@ public class home extends AppCompatActivity
     private FragmentManager manager;
     private DatabaseReference mDatabase;
     private boolean found;
+    private itemfragment fragiem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,6 +158,45 @@ public class home extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
+        getMenuInflater().inflate(R.menu.menu_search,menu);
+
+        MenuItem item = menu.findItem(R.id.action_search);
+        final SearchView searchView = (SearchView) item.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String s) {
+                 itemfragment myFragment = (itemfragment) manager.findFragmentByTag("itemfragment");
+                if (myFragment == null) {
+                    fragiem = new itemfragment();
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.container, fragiem,"itemfragment");
+                    transaction.addToBackStack("list");
+                    transaction.commit();
+                }
+                else if(!(myFragment == null) && myFragment.isVisible()){
+                    if(!s.isEmpty()){
+                        myFragment.savedata(s);
+                    }
+                }
+                return false;
+            }
+        });
+        searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    searchView.setIconified(true);
+                    FragmentTransaction transaction = manager.beginTransaction();
+                    transaction.replace(R.id.container, new HomeFragment());
+                    transaction.commit();
+                }
+            }
+        });
         return true;
     }
 
@@ -175,7 +218,6 @@ public class home extends AppCompatActivity
             startActivity(feedback);
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
