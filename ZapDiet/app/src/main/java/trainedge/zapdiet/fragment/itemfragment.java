@@ -1,13 +1,16 @@
 package trainedge.zapdiet.fragment;
 
 
-import android.app.ProgressDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 
 import trainedge.zapdiet.R;
@@ -44,7 +48,7 @@ public class itemfragment extends Fragment {
 
         InfoList = new ArrayList<>();
         dbinstance = FirebaseDatabase.getInstance();
-        if(!(val == null)) {
+        if (!(val == null)) {
             dbref = dbinstance.getReference("Nutritional_Info").child(val);
             dbref.addValueEventListener(new ValueEventListener() {
                 @Override
@@ -77,7 +81,7 @@ public class itemfragment extends Fragment {
     }
 
     public static itemfragment newInstance(String str) {
-        itemfragment fragment= new itemfragment();
+        itemfragment fragment = new itemfragment();
         Bundle args = new Bundle();
         args.putString("nutritional", str);
         fragment.setArguments(args);
@@ -87,43 +91,34 @@ public class itemfragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments()!=null){
+        if (getArguments() != null) {
             nutri = getArguments().getString("nutritional");
             val = null;
-            if(nutri.contains("Cereal")){
+            if (nutri.contains("Cereal")) {
                 val = "Cereal_Grain_and_Pasta";
-            }
-            else if(nutri.contains("Dairy")){
+            } else if (nutri.contains("Dairy")) {
                 val = "Dairy_and_Egg_Production";
-            }
-            else if(nutri.contains("Fats")){
+            } else if (nutri.contains("Fats")) {
                 val = "Fats_and_Oils";
-            }
-            else if(nutri.contains("Fruits")){
+            } else if (nutri.contains("Fruits")) {
                 val = "Fruits_and_Fruits_Juices";
-            }
-            else if(nutri.contains("Legume")){
+            } else if (nutri.contains("Legume")) {
                 val = "Legume_and_Products";
-            }
-            else if(nutri.contains("Non-Veg")){
+            } else if (nutri.contains("Non-Veg")) {
                 val = "Non_Veg_Products";
-            }
-            else if(nutri.contains("Nuts")){
+            } else if (nutri.contains("Nuts")) {
                 val = "Nuts_and_Seeds";
-            }
-            else if(nutri.contains("Spices")){
+            } else if (nutri.contains("Spices")) {
                 val = "Spices_and_Herbs";
-            }
-            else if(nutri.contains("Vegetables")){
+            } else if (nutri.contains("Vegetables")) {
                 val = "Vegetables";
-            }
-            else{
+            } else {
                 searchstr = nutri;
             }
         }
     }
 
-    public void savedata(final String str){
+    public void savedata(final String str) {
         searchstr = str;
         dbref = dbinstance.getReference("Nutritional_Info");
         dbref.addValueEventListener(new ValueEventListener() {
@@ -132,14 +127,19 @@ public class itemfragment extends Fragment {
                 InfoList.clear();
                 if (dataSnapshot.hasChildren()) {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
-                        for(DataSnapshot snapshot1 : snapshot.getChildren()){
-                            if(snapshot1.child("Item").getValue().toString().contains(str)){
+                        for (DataSnapshot snapshot1 : snapshot.getChildren()) {
+                            if (snapshot1.child("Item").getValue().toString().contains(str)) {
                                 InfoList.add(new InfoModel(snapshot1));
                             }
                         }
                     }
                 } else if (InfoList.size() == 0) {
                     Toast.makeText(getContext(), "no data found", Toast.LENGTH_SHORT).show();
+                }
+                for (int i = 0; i < InfoList.size(); i++) {
+                    String a = InfoList.get(i).item.toString();
+                    CharSequence b =highlightText(searchstr, a);
+                    InfoList.get(i).setItem(b);
                 }
             }
 
@@ -154,5 +154,25 @@ public class itemfragment extends Fragment {
         InfoAdapter adapter = new InfoAdapter(getActivity(), InfoList);
         rvItem.setAdapter(adapter);
 
+    }
+
+    public static CharSequence highlightText(String search, String originalText) {
+        if (search != null && !search.equalsIgnoreCase("")) {
+            String normalizedText = Normalizer.normalize(originalText, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", "").toLowerCase();
+            int start = normalizedText.indexOf(search);
+            if (start < 0) {
+                return originalText;
+            } else {
+                Spannable highlighted = new SpannableString(originalText);
+                while (start >= 0) {
+                    int spanStart = Math.min(start, originalText.length());
+                    int spanEnd = Math.min(start + search.length(), originalText.length());
+                    highlighted.setSpan(new ForegroundColorSpan(Color.parseColor("#109f02")), spanStart, spanEnd, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                    start = normalizedText.indexOf(search, spanEnd);
+                }
+                return highlighted;
+            }
+        }
+        return originalText;
     }
 }

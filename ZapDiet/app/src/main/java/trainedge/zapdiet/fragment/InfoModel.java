@@ -3,7 +3,7 @@ package trainedge.zapdiet.fragment;
 import com.google.firebase.database.DataSnapshot;
 
 class InfoModel {
-    String item;
+    CharSequence item;
     String carb;
     String cal;
     String fat;
@@ -18,6 +18,10 @@ class InfoModel {
         this.cal = dataSnapshot.child("Kcal").getValue(String.class);
         this.fat = dataSnapshot.child("Fat").getValue(String.class);
         this.protein = dataSnapshot.child("Proteins").getValue(String.class);
+    }
+
+    public void setItem(CharSequence itm){
+        this.item = itm;
     }
 
 }

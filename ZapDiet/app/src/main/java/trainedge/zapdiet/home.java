@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -62,6 +63,13 @@ public class home extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle("ZapDiet");
         manager = getSupportFragmentManager();
+
+        ImageView img = (ImageView) findViewById(R.id.noconn1);
+        Button bt = (Button) findViewById(R.id.retry1);
+        View v = findViewById(R.id.view1);
+        CheckConnection c = new CheckConnection(v, img, bt);
+        c.checkconn();
+
         found = false;
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

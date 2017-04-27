@@ -229,7 +229,7 @@ public class acc_details extends AppCompatActivity implements View.OnClickListen
                 String username = et.getText().toString();
                 Uri url= FirebaseAuth.getInstance().getCurrentUser().getPhotoUrl();
                 updateProfile(username, url);
-                updateui(FirebaseAuth.getInstance().getCurrentUser());
+                uname.setText(username);
             }
         });
         alertDialogBuilder.setNegativeButton("Cancel",new DialogInterface.OnClickListener(){

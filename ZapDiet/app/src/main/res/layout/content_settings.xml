@@ -95,7 +95,7 @@
         android:drawableRight="@drawable/ic_chevron_right_black_24dp"
         android:paddingLeft="30dp"
         android:paddingRight="15dp"
-        android:text="Share App"
+        android:text="Invite Friends"
         android:textAlignment="textStart"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"

@@ -2,6 +2,7 @@ package trainedge.zapdiet;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
@@ -109,7 +110,7 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
                 String sAux = "\nYour friend invited you to join our app.\n\n";
                 sAux = sAux + "https://play.google.com/store/apps/details?id=ZapDiet \n\nPlease give a try to our app.\n\n\n Thank You.";
                 i.putExtra(Intent.EXTRA_TEXT, sAux);
-                startActivity(Intent.createChooser(i, "Share using..."));
+                startActivity(Intent.createChooser(i, "Invite via..."));
             } catch(Exception e) {
                 //e.toString();
             }
@@ -138,7 +139,7 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
     }
 
     private void updateUI() {
-        boolean notifi = pref.getBoolean("notif_option",false);
+        boolean notifi = pref.getBoolean("notif_option",true);
         notif.setChecked(notifi);
     }
 

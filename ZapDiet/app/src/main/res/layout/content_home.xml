@@ -9,4 +9,31 @@
     tools:context="trainedge.zapdiet.home"
     tools:showIn="@layout/app_bar_home">
 
+    <ImageView
+        android:id="@+id/noconn1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="68dp"
+        app:srcCompat="@drawable/noconnection"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:id="@+id/retry1"
+        style="@style/com_facebook_loginview_silver_style"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/noconn1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="27dp"
+        android:text="Retry"
+        android:textAllCaps="false" />
+
+    <TextView
+        android:id="@+id/view1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/retry1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp" />
 </RelativeLayout>

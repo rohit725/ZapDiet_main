@@ -3,6 +3,7 @@ package trainedge.zapdiet;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BaseTransientBottomBar;
@@ -67,8 +68,14 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        checkConnection();
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
+        View scroll =  findViewById(R.id.scrollview);
+        ImageView noconn = (ImageView) findViewById(R.id.noConnection);
+        Button retr = (Button) findViewById(R.id.retry);
+
+        CheckConnection c = new CheckConnection(scroll, noconn, retr);
+        c.checkconn();
 
         GoogleSignIn = (Button) findViewById(R.id.GoogleSignIn);
         mAuth = FirebaseAuth.getInstance();
@@ -93,13 +100,13 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                     Intent homeIntent = new Intent(login.this, home.class);
                     startActivity(homeIntent);
                     finish();
-                }
-                else {
+                } else {
                     // User is signed out
                     Log.d(TAG, "onAuthStateChanged:signed_out");
                 }
             }
         };
+
         GoogleSignIn.setOnClickListener(this);
 
         // Initialize Facebook Login button
@@ -128,7 +135,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
         TextView signup = (TextView) findViewById(R.id.SignUp);
         show_hide = (ImageView) findViewById(R.id.show_password);
         Button sigin = (Button) findViewById(R.id.SignIn);
-        email = (EditText)findViewById(R.id.Email1);
+        email = (EditText) findViewById(R.id.Email1);
         pass = (EditText) findViewById(R.id.Password);
         TextView fpass = (TextView) findViewById(R.id.forgot);
         signup.setOnClickListener(this);
@@ -209,7 +216,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 signIn();
                 break;
             case R.id.SignUp:
-                Intent signupintent = new Intent(login.this,SignUp.class);
+                Intent signupintent = new Intent(login.this, SignUp.class);
                 startActivity(signupintent);
                 break;
             case R.id.SignIn:
@@ -232,9 +239,6 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         flag = 1;
                         break;
                 }
-                break;
-            case R.id.retry:
-                checkConnection();
                 break;
         }
     }
@@ -261,45 +265,45 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
     private TextWatcher GenericTextWatcher = new TextWatcher() {
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+        }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before,
                                   int count) {
 
-            if (email.getText().hashCode() == s.hashCode())
-            {
+            if (email.getText().hashCode() == s.hashCode()) {
                 email_onTextChanged(s);
-            }
-            else if (pass.getText().hashCode() == s.hashCode())
-            {
+            } else if (pass.getText().hashCode() == s.hashCode()) {
                 pass_onTextChanged(s);
             }
         }
+
         @Override
-        public void afterTextChanged(Editable s) {}
+        public void afterTextChanged(Editable s) {
+        }
 
     };
 
-    private void email_onTextChanged(CharSequence s){
+    private void email_onTextChanged(CharSequence s) {
         String string = s.toString();
-        if(string.length() < 10){
+        if (string.length() < 10) {
             email.setError("Recquired (10 characters minimum)");
         }
     }
 
-    private void pass_onTextChanged(CharSequence s){
+    private void pass_onTextChanged(CharSequence s) {
         String string = s.toString();
-        if(string.length() < 8){
+        if (string.length() < 8) {
             pass.setError("Recquired (8 characters minimum.)");
         }
     }
 
-    private void forgot(){
+    private void forgot() {
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
         final EditText et = new EditText(this);
-        LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT);
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         et.setLayoutParams(lp);
         // set prompts.xml to alertdialog builder
         alertDialogBuilder.setView(et);
@@ -318,7 +322,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                                     Log.d(TAG, "Email sent.");
                                     Toast.makeText(login.this, "Email sent please check.", Toast.LENGTH_LONG).show();
                                 }
-                                if(!task.isSuccessful()){
+                                if (!task.isSuccessful()) {
                                     Log.d(TAG, "Error Unauthorized email.");
                                     Toast.makeText(login.this, "Invalid Email Address.", Toast.LENGTH_SHORT).show();
                                 }
@@ -326,9 +330,9 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         });
             }
         });
-        alertDialogBuilder.setNegativeButton("Cancel",new DialogInterface.OnClickListener(){
-            public void onClick(DialogInterface dialog,int which){
-            dialog.cancel();
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
             }
         });
         // create alert dialog
@@ -337,14 +341,14 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
         alertDialog.show();
     }
 
-    private void mysignin(){
+    private void mysignin() {
         String emai = email.getText().toString();
         String pasw = pass.getText().toString();
-        if(emai.length() < 10 || !emai.contains("@") || emai.isEmpty()){
+        if (emai.length() < 10 || !emai.contains("@") || emai.isEmpty()) {
             email.setError("Enter a valid email");
             return;
         }
-        if(pasw.length() < 8){
+        if (pasw.length() < 8) {
             pass.setError("Password must be at least 8 characters");
             return;
         }
@@ -367,7 +371,7 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                         }
                         if (task.isSuccessful()) {
                             progressDialog.dismiss();
-                            Intent homeint = new Intent(login.this,home.class);
+                            Intent homeint = new Intent(login.this, home.class);
                             startActivity(homeint);
                         }
 
@@ -375,38 +379,4 @@ public class login extends AppCompatActivity implements GoogleApiClient.OnConnec
                 });
     }
 
-    public boolean isOnline() {
-        Runtime runtime = Runtime.getRuntime();
-        try {
-            Process ipProcess = runtime.exec("/system/bin/ping -c 1 8.8.8.8");
-            int     exitValue = ipProcess.waitFor();
-            return (exitValue == 0);
-        }
-        catch (IOException e)          { e.printStackTrace(); }
-        catch (InterruptedException e) { e.printStackTrace(); }
-
-        return false;
-    }
-
-    public void checkConnection(){
-        ScrollView scroll = (ScrollView) findViewById(R.id.scrollview);
-        ProgressBar progress = (ProgressBar) findViewById(R.id.progressBar2);
-        ImageView noconn = (ImageView) findViewById(R.id.noConnection);
-        Button retr = (Button) findViewById(R.id.retry);
-        retr.setOnClickListener(this);
-        scroll.setVisibility(View.GONE);
-        noconn.setVisibility(View.GONE);
-        retr.setVisibility(View.GONE);
-        if(isOnline()){
-            progress.setVisibility(View.GONE);
-            scroll.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            progress.setVisibility(View.GONE);
-            noconn.setVisibility(View.VISIBLE);
-            retr.setVisibility(View.VISIBLE);
-
-        }
-    }
 }

@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="?android:attr/panelBackground"
@@ -13,17 +14,17 @@
 
     <ImageView
         android:id="@+id/header_cover_image"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="200dp"
         android:elevation="1dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/materialback2"
-        tools:layout_constraintTop_creator="1"
-        tools:layout_constraintRight_creator="1"
-        app:layout_constraintRight_toRightOf="parent"
-        tools:layout_constraintLeft_creator="1"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/background_account"
+        tools:layout_constraintLeft_creator="1"
+        tools:layout_constraintRight_creator="1"
+        tools:layout_constraintTop_creator="1" />
 
     <ImageView
         android:id="@+id/user_profile_photo"
