@@ -27,6 +27,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,7 +47,7 @@ import trainedge.zapdiet.fragment.itemfragment;
 import trainedge.zapdiet.fragment.userinput;
 
 public class home extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, NutritionalFragment.OnFragmentInterActionListener, ChartFragment.OnFragmentInterActionListener{
+        implements NavigationView.OnNavigationItemSelectedListener, NutritionalFragment.OnFragmentInterActionListener, ChartFragment.OnFragmentInterActionListener {
 
     private static final String TAG = "Home Activity";
     private View headerView;
@@ -67,8 +68,6 @@ public class home extends AppCompatActivity
         ImageView img = (ImageView) findViewById(R.id.noconn1);
         Button bt = (Button) findViewById(R.id.retry1);
         View v = findViewById(R.id.view1);
-        CheckConnection c = new CheckConnection(v, img, bt);
-        c.checkconn();
 
         found = false;
 
@@ -80,6 +79,13 @@ public class home extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         mDatabase = FirebaseDatabase.getInstance().getReference("users");
+
+        CheckConnection c = new CheckConnection(v, img, bt);
+        boolean check = c.checkconn();
+        if (!check) {
+            return;
+        }
+
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
         dialog.setMessage("Loading...");
@@ -166,7 +172,7 @@ public class home extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.home, menu);
-        getMenuInflater().inflate(R.menu.menu_search,menu);
+        getMenuInflater().inflate(R.menu.menu_search, menu);
 
         MenuItem item = menu.findItem(R.id.action_search);
         final SearchView searchView = (SearchView) item.getActionView();
@@ -178,18 +184,15 @@ public class home extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                 itemfragment myFragment = (itemfragment) manager.findFragmentByTag("itemfragment");
+                itemfragment myFragment = (itemfragment) manager.findFragmentByTag("itemfragment");
                 if (myFragment == null) {
-                    fragiem = new itemfragment();
-                    FragmentTransaction transaction = manager.beginTransaction();
-                    transaction.replace(R.id.container, fragiem,"itemfragment");
-                    transaction.addToBackStack("list");
-                    transaction.commit();
-                }
-                else if(!(myFragment == null) && myFragment.isVisible()){
-                    if(!s.isEmpty()){
-                        myFragment.savedata(s);
-                    }
+                    myFragment = new itemfragment();
+                    makeSearchFragmentVisible();
+                    performSearch(s, myFragment);
+                } else if (myFragment.isVisible()) {
+                    performSearch(s, myFragment);
+                    //Toast.makeText(home.this, "searching...", Toast.LENGTH_SHORT).show();
+                } else {
                 }
                 return false;
             }
@@ -205,17 +208,33 @@ public class home extends AppCompatActivity
                 }
             }
         });
+        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
+            @Override
+            public boolean onClose() {
+                return false;
+            }
+        });
         return true;
+    }
+
+    private void performSearch(String searchString, itemfragment myFragment) {
+        if (!searchString.isEmpty()) {
+            myFragment.savedata(searchString);
+        }
+    }
+
+    private void makeSearchFragmentVisible() {
+        itemfragment myFragment = new itemfragment();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.replace(R.id.container, myFragment, "itemfragment");
+        transaction.addToBackStack("list");
+        transaction.commit();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Intent settingintent = new Intent(home.this, Settings.class);
             startActivity(settingintent);

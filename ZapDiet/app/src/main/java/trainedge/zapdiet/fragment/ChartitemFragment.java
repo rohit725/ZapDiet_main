@@ -61,7 +61,9 @@ public class ChartitemFragment extends Fragment {
                     TextView lunc = (TextView) view.findViewById(R.id.lunch);
                     TextView evensnack = (TextView) view.findViewById(R.id.evening_snacks);
                     TextView dinn = (TextView) view.findViewById(R.id.dinner);
-                    dietfo.setText(val);
+                    if(diet != null){
+                        dietfo.setText(diet);
+                    }
                     breakf.setText(breakfast);
                     mornsnack.setText(morn_snack);
                     lunc.setText(lunch);

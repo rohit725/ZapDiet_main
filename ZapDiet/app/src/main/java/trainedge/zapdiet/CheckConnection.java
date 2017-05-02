@@ -18,7 +18,7 @@ class CheckConnection {
         this.retry = retry;
     }
 
-    public void checkconn() {
+    public boolean checkconn() {
         retry.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -30,9 +30,11 @@ class CheckConnection {
         retry.setVisibility(View.GONE);
         if (isOnline()) {
             v.setVisibility(View.VISIBLE);
+            return true;
         } else {
             img.setVisibility(View.VISIBLE);
             retry.setVisibility(View.VISIBLE);
+            return false;
         }
     }
 
