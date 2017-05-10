@@ -9,9 +9,7 @@ class InfoModel {
     String fat;
     String protein;
 
-    public InfoModel(){
 
-    }
     public InfoModel(DataSnapshot dataSnapshot){
         this.item = dataSnapshot.child("Item").getValue(String.class);
         this.carb = dataSnapshot.child("Carbohydrate").getValue(String.class);

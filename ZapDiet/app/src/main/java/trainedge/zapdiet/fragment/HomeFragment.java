@@ -16,6 +16,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.HashMap;
+
 import trainedge.zapdiet.R;
 
 
@@ -26,6 +28,7 @@ public class HomeFragment extends Fragment {
     private FirebaseDatabase dbinstance;
     private DatabaseReference dbref;
     private double bmi;
+    private HashMap<Integer,String> dietplans;
 
     public HomeFragment() {
 
@@ -36,6 +39,10 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_home, container, false);
+        dietplans.put(1,"Weight_Gain");
+        dietplans.put(2,"Normal");
+        dietplans.put(3,"Weight_Loss");
+        dietplans.put(4,"Obesity");
         String uid = FirebaseAuth.getInstance().getCurrentUser().getUid().toString();
         String bmistr = FirebaseDatabase.getInstance().getReference("users").child(uid).child("BMI").toString();
         try {
