@@ -10,7 +10,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
@@ -27,7 +26,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -40,9 +38,9 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import trainedge.zapdiet.fragment.ChartFragment;
-import trainedge.zapdiet.fragment.ChartitemFragment;
 import trainedge.zapdiet.fragment.HomeFragment;
 import trainedge.zapdiet.fragment.NutritionalFragment;
+import trainedge.zapdiet.fragment.SearchFragment;
 import trainedge.zapdiet.fragment.itemfragment;
 import trainedge.zapdiet.fragment.userinput;
 
@@ -184,17 +182,8 @@ public class home extends AppCompatActivity
 
             @Override
             public boolean onQueryTextChange(String s) {
-                itemfragment myFragment = (itemfragment) manager.findFragmentByTag("itemfragment");
-                if (myFragment == null) {
-                    myFragment = new itemfragment();
-                    makeSearchFragmentVisible();
-                    performSearch(s, myFragment);
-                } else if (myFragment.isVisible()) {
-                    performSearch(s, myFragment);
-                    //Toast.makeText(home.this, "searching...", Toast.LENGTH_SHORT).show();
-                } else {
-                }
-                return false;
+                makeSearchFragmentVisible(s);
+                return true;
             }
         });
         searchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
@@ -211,23 +200,18 @@ public class home extends AppCompatActivity
         searchView.setOnCloseListener(new SearchView.OnCloseListener() {
             @Override
             public boolean onClose() {
-                return false;
+
+                return true;
             }
         });
         return true;
     }
 
-    private void performSearch(String searchString, itemfragment myFragment) {
-        if (!searchString.isEmpty()) {
-            myFragment.savedata(searchString);
-        }
-    }
 
-    private void makeSearchFragmentVisible() {
-        itemfragment myFragment = new itemfragment();
+    private void makeSearchFragmentVisible(String s) {
+        SearchFragment myFragment = SearchFragment.newInstance(s);
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.replace(R.id.container, myFragment, "itemfragment");
-        transaction.addToBackStack("list");
+        transaction.replace(R.id.container, myFragment, "searchFragment");
         transaction.commit();
     }
 

@@ -43,18 +43,6 @@ public class Splash extends AppCompatActivity {
                             }
             }
         };
-        shownotification();
         mythread.start();
-    }
-    public void shownotification() {
-        if(pref.getBoolean("notif_option",true)){
-            Intent notifyIntent = new Intent(Splash.this,MyReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast
-                    (Splash.this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
-
-            AlarmManager alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,  System.currentTimeMillis(),
-                    1000 * 60 * 60 * 24, pendingIntent);
-        }
     }
 }
