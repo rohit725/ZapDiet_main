@@ -6,13 +6,6 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <receiver
-        android:name=".MyReceiver"
-        android:enabled="true"
-        android:exported="false" >
-    </receiver>
-
-
     <uses-feature android:name="android.hardware.camera"
         android:required="true" />
 

@@ -45,7 +45,7 @@ class HeadingsAdapter extends RecyclerView.Adapter<HeadingHolder> {
             @Override
             public void onClick(View v) {
                 preferences = context.getSharedPreferences("pref", Context.MODE_PRIVATE);
-                String inthrough=preferences.getString("InThrough","NutritionalFragment").toString();
+                String inthrough=preferences.getString("InThrough","Default").toString();
                 if(inthrough.contains("NutritionalFragment")){
                     itemfragment item = itemfragment.newInstance(str);
                     FragmentManager manager = ((FragmentActivity) context).getSupportFragmentManager();

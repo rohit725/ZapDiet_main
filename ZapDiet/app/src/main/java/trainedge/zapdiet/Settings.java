@@ -57,11 +57,12 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
                 FirebaseUser user = firebaseAuth.getCurrentUser();
                 if(user == null) {
                     Log.d(TAG, "onAuthStateChanged:signed_out");
+                   // if (mAuth.getCurrentUser()==null){
                         Intent logint = new Intent(Settings.this, login.class);
                         startActivity(logint);
                         finish();
 
-
+                   // }
                 }
             }
         };
@@ -69,8 +70,11 @@ public class Settings extends AppCompatActivity implements CompoundButton.OnChec
         updateUI();
 
 
-    }
+        /*SharedPreferences.Editor editor = pref.edit();
+        editor.putBoolean("is_logged_in",true);
+        editor.apply();*/
 
+    }
 
     @Override
     protected void onStart() {
